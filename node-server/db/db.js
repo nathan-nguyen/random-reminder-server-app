@@ -2,32 +2,23 @@ module.exports = function (){
 
 	var db = {};
 	var Nedb = require('nedb');
-	var data = new Nedb({ filename: './db/data.db', autoload: true });
+	var post = new Nedb({ filename: './db/post.db', autoload: true });
 
-	db.queryData = function(id) {
-		data.find({ _id:  id }, function (err, docs) {
-			if (err != null) {
+	db.queryPost = function(id, cb) {
+		post.find({ _id: id }, function (err, docs) {
+			if (err) {
 				console.log(err);
-				return;
+				return cb(err);
 			}
 
 			if (docs.length > 0) {
-				console.log("Content for id " + id + ": " + docs[0].content);
+				console.log("Content for post id " + id + ": " + docs[0].content);
 			}
 			else {
-				console.log("Content for id " + id + " does not exist in db");
+				console.log("Content for post id " + id + " does not exist in db");
 			}
+			return cb(err, docs);
 		});
-	}
-
-	db.updateData = function(id, content){
-		data.remove({ _id: id}, {}, function (err, numRemoved) {
-                	if (err != null) console.log(err);
-        	});
-
-		data.insert({ _id: id, content: content}, function (err) {
-                	if (err != null) console.log(err);
-        	});
 	}
 
 	return db;

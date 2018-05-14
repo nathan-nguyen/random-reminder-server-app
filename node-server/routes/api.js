@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
-router.use(bodyParser.json());
+//router.use(bodyParser.json());
 
 var winston = require('winston');                                                               //logger module
 var logger = new (winston.Logger)({
@@ -11,20 +11,28 @@ var logger = new (winston.Logger)({
         ]
 });
 
-router.route('/api/post/:_id').get(function (req, res) {
-	var returnRes = {
-                code: 1,
-                msg: '',
-                result: {},
-        }
+var path = require('path');
 
-	// Intialize result
-	var result = {status:"OK"};
+const dbModule = require('../db/db');
+const db = new dbModule();
 
-        returnRes.msg = 'Post id ' + req.params._id;
-        returnRes.result = result;
+router.use(express.static('public'));
 
-        res.json(returnRes);
+router.route('/post/:_id').get(function (req, res) {
+        db.queryPost(req.params._id, function(err, docs) {
+		if (err){
+			logger.error(err);
+			res.sendFile(path.join(__dirname + '/../html/500.html'));
+		}
+		else {
+			if (docs.length > 0) {
+				res.sendFile(path.join(__dirname + docs[0].content));
+			}
+			else {
+				res.sendFile(path.join(__dirname + '/../html/404.html'));
+			}
+		}
+	});
 });
 
 module.exports = router;
