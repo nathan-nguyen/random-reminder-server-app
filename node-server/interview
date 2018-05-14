@@ -1,0 +1,93 @@
+1. Stack vs heap
+- Memory allocation
+- Memory disallocation
+- Performance
+
+2. Collection API
+- List and Set
+- NOT Map
+
+3. Architecture styles
+- Independent components
+	- Communicating processes
+		- Client and Server
+	- Event systems
+		- Implicit invocation
+		- Explicit invocation
+- Data flow
+	- Batch sequential
+	- Pipe-and-filter
+- Data-centered
+	- Repository
+	- Black board
+- Virtual machine
+	- Interpreter
+	- Rule-based system
+- Call and return
+	- Main program and subroutine
+	- Object-oriented
+	- Layered system
+
+4. Tree
+- Binary Tree
+	- Balanced binary tree definition?
+	- Binary Search Tree
+		- How do you check that a given binary tree is a valid balanced binary search tree?
+- Height and Depth definition?
+
+5. Network
+- DNS
+- Open System Interconnection model (OSI model)
+- TCP/IP model
+- Network Layers
+- Stop-and-Wait Protocol
+- What is Piggybacking?
+
+6. Java
+- JVM
+	- Is JVM platform independent?
+- Serialization (Java)
+- Garbage Collector
+
+7. Object Oriented Programming (OOP)
+- What is Object Oriented Programming?
+- What are main features of OOP?
+- Overloading vs Overriding
+
+8. Thread vs Process
+
+9. SDLC
+- Waterfall Model
+
+10. Security
+- Authentication and Authorization
+
+11. C++
+- Virtual Function
+
+12. Model-View-Controller (MVC)
+- MVC Static Structure
+- MVC Dynamic Structure
+- Advantages and Disadvantages
+
+13. Design Pattern
+- Singleton Pattern
+- Factory Pattern
+
+14. C
+- #undef
+
+15. Layered Architecture
+- Strict Layered Style
+- Relax Layered Style
+
+16. Data structure
+- Queue
+	- How does a double end queue is designed?
+	- Implement a queue using 2 stacks
+- LinkedList
+	- Reverse a linked list each k nodes
+
+17. Algo
+- Quick Union
+
