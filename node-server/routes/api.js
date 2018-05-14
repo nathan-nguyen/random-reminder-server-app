@@ -25,8 +25,8 @@ router.route('/post/:_id').get(function (req, res) {
 			res.sendFile(path.join(__dirname + '/../html/500.html'));
 		}
 		else {
-			if (docs.length > 0) {
-				res.sendFile(path.join(__dirname + docs[0].content));
+			if (docs) {
+				res.sendFile(path.join(__dirname + docs));
 			}
 			else {
 				res.sendFile(path.join(__dirname + '/../html/404.html'));
@@ -42,11 +42,11 @@ router.route('/tag/:_id').get(function (req, res) {
                         res.sendFile(path.join(__dirname + '/../html/500.html'));
                 }   
                 else {
-                        if (docs.length > 0) {
-				console.log(docs[0].content);
+                        if (docs) {
+				console.log(docs);
 				var s = "<html><body><h3>" + req.params._id + "</h3>";
-				for (var i = 0; i < docs[0].content.length; i++) {
-					s += '<a href="/post/' + docs[0].content[i] + '">' + docs[0].content[i] + '</a><br/>';
+				for (var i = 0; i < docs.length; i++) {
+					s += '<a href="/post/' + docs[i] + '">' + docs[i] + '</a><br/>';
 				}
 				s += "</body></html>";
 				
@@ -57,6 +57,23 @@ router.route('/tag/:_id').get(function (req, res) {
                         }   
                 }   
         }); 
+});
+
+router.route('/random/').get(function (req, res) {
+        db.queryRandomPost(function(err, docs) {
+                if (err){
+                        logger.error(err);
+                        res.sendFile(path.join(__dirname + '/../html/500.html'));
+                }
+                else {
+                        if (docs) {
+                                res.sendFile(path.join(__dirname + docs));
+                        }
+                        else {
+                                res.sendFile(path.join(__dirname + '/../html/404.html'));
+                        }
+                }
+        });
 });
 
 module.exports = router;
