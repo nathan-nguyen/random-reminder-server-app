@@ -10,7 +10,6 @@ import java.util.logging.Logger;
 public abstract class MemoryAider {
     private static final Logger LOGGER = Logger.getLogger(MemoryAider.class.getName());
 
-	private MemoryTag rootNode = new MemoryTag("root");
 	private Map<String, MemoryTag> tagList = new HashMap<>();
 	private Properties properties = new Properties();
 
@@ -28,7 +27,7 @@ public abstract class MemoryAider {
 
 	// TODO: Quality Checking - Duplicate - Loop for each line
 	public void loadData(InputStream inputStream) throws Exception {
-		tagList.put("root", rootNode);
+		tagList.put("root", new MemoryTag("root"));
 
 		Scanner scanner = new Scanner(inputStream);
 
@@ -68,6 +67,7 @@ public abstract class MemoryAider {
         if (parentNode == null) {
             LOGGER.info("Parent does not exist: " + parent);
             parentNode = new MemoryTag(parent);
+            tagList.put(parent, parentNode);
         }
 
         LOGGER.info("child: " + child);
@@ -93,7 +93,9 @@ public abstract class MemoryAider {
     }
 
 	public String getRandomLeaf() throws MemoryAiderException {
-	    if (rootNode.childCount == 0) return new String("No note");
+	    MemoryTag rootNode = tagList.get(Constant.ROOT);
+
+	    if (rootNode == null || rootNode.childCount == 0) return new String("No note");
 		return rootNode.getChild(MemoryAiderUtil.randomRange(rootNode.getChildCount()));
 	}
 }

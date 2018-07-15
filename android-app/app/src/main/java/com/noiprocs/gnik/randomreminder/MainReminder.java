@@ -51,6 +51,7 @@ public class MainReminder extends AppCompatActivity {
         Button randomButton = findViewById(R.id.randomButton);
 
         try {
+            this.getBaseContext().deleteDatabase("memory_aider_database");
             mMemoryAider = new RandomReminder(this.getApplicationContext());
             mMemoryAider.loadData();
         } catch (Exception e) {

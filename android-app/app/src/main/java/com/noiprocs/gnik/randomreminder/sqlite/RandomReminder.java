@@ -29,7 +29,7 @@ public class RandomReminder extends MemoryAider {
                 String parent = structureCursor.getString(structureCursor.getColumnIndex(SQLiteDBHelper.EDGE_PARENT));
                 String child = structureCursor.getString(structureCursor.getColumnIndex(SQLiteDBHelper.EDGE_CHILD));
 
-                Log.i(TAG, "Construct structure: " + parent + " " + child);
+                Log.i(TAG, "Construct structure: " + parent + " - " + child);
                 this.addParentChild(parent, child);
                 structureCursor.moveToNext();
             }
@@ -42,34 +42,41 @@ public class RandomReminder extends MemoryAider {
         Cursor leafCursor = database.rawQuery("select * from " + SQLiteDBHelper.LEAF_TABLE_NAME, null);
         if (leafCursor.moveToFirst()) {
             while (!leafCursor.isAfterLast()) {
+                int id = leafCursor.getInt(leafCursor.getColumnIndex(SQLiteDBHelper.LEAF_TABLE_ID));
                 String parent = leafCursor.getString(leafCursor.getColumnIndex(SQLiteDBHelper.LEAF_PARENT));
                 String content = leafCursor.getString(leafCursor.getColumnIndex(SQLiteDBHelper.LEAF_CONTENT));
 
-                Log.i(TAG, "Content: " + parent + " " + content);
+                Log.i(TAG, "Content: " + parent + " - " + content);
                 this.addLeaf(parent, content);
+                leafCursor.moveToNext();
             }
         }
     }
 
-    public void addTag(String parent, String child){
+    public long addTag(String parent, String child){
         SQLiteDatabase database = new SQLiteDBHelper(mContext).getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(SQLiteDBHelper.EDGE_PARENT, parent);
         values.put(SQLiteDBHelper.EDGE_CHILD, child);
 
-        database.insert(SQLiteDBHelper.EDGE_TABLE_NAME, null, values);
+        long rowId = database.insert(SQLiteDBHelper.EDGE_TABLE_NAME, null, values);
+
+        Log.i(TAG, "insert " + parent + " - " + child + " - Result: " + rowId);
 
         this.addParentChild(parent, child);
+
+        return rowId;
     }
 
-    public void addContent(String parent, String content) throws MemoryAiderException{
+    public long addContent(String parent, String content) throws MemoryAiderException{
         SQLiteDatabase database = new SQLiteDBHelper(mContext).getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(SQLiteDBHelper.LEAF_PARENT, parent);
         values.put(SQLiteDBHelper.LEAF_CONTENT, content);
 
-        database.insert(SQLiteDBHelper.LEAF_TABLE_NAME, null, values);
+        long rowId = database.insert(SQLiteDBHelper.LEAF_TABLE_NAME, null, values);
 
         this.addLeaf(parent, content);
+        return rowId;
     }
 }

@@ -13,6 +13,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
     public static final String EDGE_CHILD = "child";
 
     public static final String LEAF_TABLE_NAME = "leaf";
+    public static final String LEAF_TABLE_ID = "id";
     public static final String LEAF_PARENT = "parent";
     public static final String LEAF_CONTENT = "content";
 
@@ -24,8 +25,10 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + EDGE_TABLE_NAME + " (" +
                 EDGE_PARENT + " TEXT, " +
-                EDGE_CHILD + " TEXT" + ")");
+                EDGE_CHILD + " TEXT, " +
+                "PRIMARY KEY (" + EDGE_PARENT + ", " + EDGE_CHILD + "))");
         db.execSQL("CREATE TABLE " + LEAF_TABLE_NAME + " (" +
+                LEAF_TABLE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 LEAF_PARENT + " TEXT, " +
                 LEAF_CONTENT + " TEXT" + ")");
     }
