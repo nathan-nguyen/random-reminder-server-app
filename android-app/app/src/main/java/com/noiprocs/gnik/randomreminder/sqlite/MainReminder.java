@@ -1,4 +1,4 @@
-package com.noiprocs.gnik.randomreminder;
+package com.noiprocs.gnik.randomreminder.sqlite;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.noiprocs.gnik.randomreminder.R;
+import com.noiprocs.gnik.randomreminder.RandomReminder;
 import com.noiprocs.gnik.randomreminder.core.MemoryAider;
 import com.noiprocs.gnik.randomreminder.core.MemoryAiderException;
 
@@ -17,7 +19,7 @@ import java.io.InputStream;
 public class MainReminder extends AppCompatActivity {
 
     private TextView mTextMessage;
-    private MemoryAider mMemoryAider;
+    private RandomReminder mMemoryAider;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -51,7 +53,7 @@ public class MainReminder extends AppCompatActivity {
         Button randomButton = findViewById(R.id.randomButton);
 
         try {
-            mMemoryAider = new MemoryAider();
+            mMemoryAider = new RandomReminder();
             InputStream applicationProperties = getBaseContext().getAssets().open(getString(R.string.app_preference));
             mMemoryAider.initializeProperties(applicationProperties);
             applicationProperties.close();

@@ -2,16 +2,13 @@ package com.noiprocs.gnik.randomreminder.core;
 
 import android.util.Log;
 
-import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.*;
 import java.util.Properties;
 import java.util.Scanner;
 
-public class MemoryAider {
+public abstract class MemoryAider {
 	private final String TAG = MemoryAider.class.getCanonicalName();
 
 	private MemoryTag rootNode = new MemoryTag("root");
@@ -39,19 +36,10 @@ public class MemoryAider {
 			String parent = result[0];
 			Log.i(TAG,"parent: " + parent);
 
-			MemoryTag parentNode = tagList.get(parent);
-			if (parentNode == null) throw new MemoryAiderException("Parent does not exist: " + parent);
 			String[] childrenList = result[1].split(Constant.COMMA_CHARACTER);
 
 			for (String child: childrenList) {
-				Log.i(TAG,"child: " + child);
-				MemoryTag childNode = tagList.get(new MemoryTag(child));
-				if (childNode == null) {
-					childNode = new MemoryTag(child);
-				}
-				parentNode.addChild(childNode);
-				childNode.addParent(parentNode);
-				tagList.put(child, childNode);
+				addParentChild(parent, child);
 			}
 		}
 
@@ -64,17 +52,41 @@ public class MemoryAider {
 			String parent = result[0];
 			Log.i(TAG,"parent: " + parent);
 		
-			MemoryTag parentNode = tagList.get(parent);
-			if (parentNode == null) throw new MemoryAiderException("Parent does not exist: " + parent);
-
-			MemoryLeaf childNode = new MemoryLeaf(result[1]);
-			parentNode.addChild(childNode);
-			childNode.addParent(parentNode);
-			childNode.updateChildCount();
+			addLeaf(parent, result[1]);
 		}
 	}
 
+	protected void addParentChild(String parent, String child) {
+        MemoryTag parentNode = tagList.get(parent);
+        if (parentNode == null) {
+            Log.i(TAG, "Parent does not exist: " + parent);
+            parentNode = new MemoryTag(parent);
+        }
+
+        Log.i(TAG,"child: " + child);
+        MemoryTag childNode = tagList.get(new MemoryTag(child));
+
+        if (childNode == null) {
+            childNode = new MemoryTag(child);
+        }
+
+        parentNode.addChild(childNode);
+        childNode.addParent(parentNode);
+        tagList.put(child, childNode);
+    }
+
+    protected void addLeaf(String parent, String content) throws MemoryAiderException {
+        MemoryTag parentNode = tagList.get(parent);
+        if (parentNode == null) throw new MemoryAiderException("Parent does not exist: " + parent);
+
+        MemoryLeaf childNode = new MemoryLeaf(content);
+        parentNode.addChild(childNode);
+        childNode.addParent(parentNode);
+        childNode.updateChildCount();
+    }
+
 	public String getRandomLeaf() throws MemoryAiderException {
+	    if (rootNode.childCount == 0) return new String("No note");
 		return rootNode.getChild(MemoryAiderUtil.randomRange(rootNode.getChildCount()));
 	}
 }
