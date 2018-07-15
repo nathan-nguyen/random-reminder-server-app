@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">Random Reminder</string>
     <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
+    <string name="title_add_leaf">Add Leaf</string>
+    <string name="title_add_tag">Add Tag</string>
     <string name="title_notifications">Notifications</string>
     <string name="app_preference">app.properties</string>
     <string name="actity_main_reminder_random_button_text">Random Reminder</string>
