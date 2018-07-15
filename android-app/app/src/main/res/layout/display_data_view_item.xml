@@ -1,15 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/display_data_view_item"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="30dp"
-    android:padding="5dp">
+    android:layout_height="40dp"
+    android:padding="5dp"
+    android:background="@drawable/bg_parent_rounded_corner">
 
     <TextView
         android:id="@+id/display_data_view_item_label"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:text="Memory Note"/>
 
+    <ImageButton
+        android:id="@+id/display_data_view_item_delete_button"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        app:srcCompat="@android:drawable/btn_dialog"/>
 </RelativeLayout>
