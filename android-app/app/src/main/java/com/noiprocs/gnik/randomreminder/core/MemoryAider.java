@@ -1,15 +1,14 @@
 package com.noiprocs.gnik.randomreminder.core;
 
-import android.util.Log;
-
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 public abstract class MemoryAider {
-	private final String TAG = MemoryAider.class.getCanonicalName();
+    private static final Logger LOGGER = Logger.getLogger(MemoryAider.class.getName());
 
 	private MemoryTag rootNode = new MemoryTag("root");
 	private Map<String, MemoryTag> tagList = new HashMap<>();
@@ -18,6 +17,14 @@ public abstract class MemoryAider {
 	public void initializeProperties(InputStream inputStream) throws Exception {
 		properties.load(inputStream);
 	}
+
+	public void loadData() throws MemoryAiderException {
+	    this.loadStructureData();
+	    this.loadContentData();
+    }
+
+    protected abstract void loadStructureData();
+	protected abstract void loadContentData() throws MemoryAiderException;
 
 	// TODO: Quality Checking - Duplicate - Loop for each line
 	public void loadData(InputStream inputStream) throws Exception {
@@ -34,7 +41,7 @@ public abstract class MemoryAider {
 
 			String[] result = MemoryAiderUtil.firstSplit(s, Constant.COLON_CHARACTER);
 			String parent = result[0];
-			Log.i(TAG,"parent: " + parent);
+			LOGGER.info("parent: " + parent);
 
 			String[] childrenList = result[1].split(Constant.COMMA_CHARACTER);
 
@@ -50,7 +57,7 @@ public abstract class MemoryAider {
 
 			String[] result = MemoryAiderUtil.firstSplit(s, Constant.DELIMETER);
 			String parent = result[0];
-			Log.i(TAG,"parent: " + parent);
+			LOGGER.info("parent: " + parent);
 		
 			addLeaf(parent, result[1]);
 		}
@@ -59,11 +66,11 @@ public abstract class MemoryAider {
 	protected void addParentChild(String parent, String child) {
         MemoryTag parentNode = tagList.get(parent);
         if (parentNode == null) {
-            Log.i(TAG, "Parent does not exist: " + parent);
+            LOGGER.info("Parent does not exist: " + parent);
             parentNode = new MemoryTag(parent);
         }
 
-        Log.i(TAG,"child: " + child);
+        LOGGER.info("child: " + child);
         MemoryTag childNode = tagList.get(new MemoryTag(child));
 
         if (childNode == null) {

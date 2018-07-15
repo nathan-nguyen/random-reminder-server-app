@@ -25,11 +25,15 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE " + EDGE_TABLE_NAME + " (" +
                 EDGE_PARENT + " TEXT, " +
                 EDGE_CHILD + " TEXT" + ")");
+        db.execSQL("CREATE TABLE " + LEAF_TABLE_NAME + " (" +
+                LEAF_PARENT + " TEXT, " +
+                LEAF_CONTENT + " TEXT" + ")");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + EDGE_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + LEAF_TABLE_NAME);
         onCreate(db);
     }
 }

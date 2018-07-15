@@ -51,14 +51,8 @@ public class MainReminder extends AppCompatActivity {
         Button randomButton = findViewById(R.id.randomButton);
 
         try {
-            mMemoryAider = new RandomReminder();
-            InputStream applicationProperties = getBaseContext().getAssets().open(getString(R.string.app_preference));
-            mMemoryAider.initializeProperties(applicationProperties);
-            applicationProperties.close();
-
-            InputStream dataFileInputStream = getBaseContext().getAssets().open("memoryAider.dat");
-            mMemoryAider.loadData(dataFileInputStream);
-            dataFileInputStream.close();
+            mMemoryAider = new RandomReminder(this.getApplicationContext());
+            mMemoryAider.loadData();
         } catch (Exception e) {
             mTextMessage.setText(e.toString());
             return;
