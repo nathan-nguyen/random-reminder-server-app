@@ -1,7 +1,7 @@
 package com.noiprocs.gnik.randomreminder.core;
 
 public class Constant {
-	public static final String PROPERTIES_FILE = "application.properties";
+	public static final String PROPERTIES_FILE = "app.properties";
 	public static final String DATA_FILE_KEY = "memoryAider.dataFile";
 
 	public static final String DELIMETER = "|";

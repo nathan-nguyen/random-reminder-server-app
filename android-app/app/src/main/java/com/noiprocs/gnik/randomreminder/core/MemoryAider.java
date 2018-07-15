@@ -1,7 +1,10 @@
 package com.noiprocs.gnik.randomreminder.core;
 
+import android.util.Log;
+
 import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.*;
@@ -9,37 +12,21 @@ import java.util.Properties;
 import java.util.Scanner;
 
 public class MemoryAider {
-	private static final Logger LOGGER = Logger.getLogger(MemoryAider.class.getName());
+	private final String TAG = MemoryAider.class.getCanonicalName();
 
 	private MemoryTag rootNode = new MemoryTag("root");
 	private Map<String, MemoryTag> tagList = new HashMap<>();
 	private Properties properties = new Properties();
 
-	public static void main(String[] args) throws Exception {
-		LogManager.getLogManager().reset();
-
-		MemoryAider memoryAider = new MemoryAider();
-		memoryAider.initializeProperties();
-		memoryAider.loadData();
-
-		System.out.println(memoryAider.getRandomLeaf());
-	}
-
-	private void initializeProperties() throws Exception {
-		FileReader fileReader = null;
-		fileReader = new FileReader(Constant.PROPERTIES_FILE);
-		properties.load(fileReader);
-		fileReader.close();
+	public void initializeProperties(InputStream inputStream) throws Exception {
+		properties.load(inputStream);
 	}
 
 	// TODO: Quality Checking - Duplicate - Loop for each line
-	private void loadData() throws Exception {
+	public void loadData(InputStream inputStream) throws Exception {
 		tagList.put("root", rootNode);
 
-		String fileName = properties.getProperty(Constant.DATA_FILE_KEY);
-		LOGGER.info("Data File Format: " + fileName);
-
-		Scanner scanner = new Scanner(new FileInputStream(fileName));
+		Scanner scanner = new Scanner(inputStream);
 
 		// Read and construct the tag graph
 		while (scanner.hasNextLine()) {
@@ -50,15 +37,18 @@ public class MemoryAider {
 
 			String[] result = MemoryAiderUtil.firstSplit(s, Constant.COLON_CHARACTER);
 			String parent = result[0];
-			LOGGER.info("parent: " + parent);
+			Log.i(TAG,"parent: " + parent);
 
 			MemoryTag parentNode = tagList.get(parent);
 			if (parentNode == null) throw new MemoryAiderException("Parent does not exist: " + parent);
 			String[] childrenList = result[1].split(Constant.COMMA_CHARACTER);
 
 			for (String child: childrenList) {
-				LOGGER.info("child: " + child);
-				MemoryTag childNode = tagList.getOrDefault(child, new MemoryTag(child));
+				Log.i(TAG,"child: " + child);
+				MemoryTag childNode = tagList.get(new MemoryTag(child));
+				if (childNode == null) {
+					childNode = new MemoryTag(child);
+				}
 				parentNode.addChild(childNode);
 				childNode.addParent(parentNode);
 				tagList.put(child, childNode);
@@ -72,7 +62,7 @@ public class MemoryAider {
 
 			String[] result = MemoryAiderUtil.firstSplit(s, Constant.DELIMETER);
 			String parent = result[0];
-			LOGGER.info("parent: " + parent);
+			Log.i(TAG,"parent: " + parent);
 		
 			MemoryTag parentNode = tagList.get(parent);
 			if (parentNode == null) throw new MemoryAiderException("Parent does not exist: " + parent);
@@ -84,7 +74,7 @@ public class MemoryAider {
 		}
 	}
 
-	private String getRandomLeaf() throws MemoryAiderException {
+	public String getRandomLeaf() throws MemoryAiderException {
 		return rootNode.getChild(MemoryAiderUtil.randomRange(rootNode.getChildCount()));
 	}
 }
