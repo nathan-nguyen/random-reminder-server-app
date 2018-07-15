@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -31,12 +32,18 @@ public class MainReminder extends AppCompatActivity {
             };
 
     private void toggleUI(int mode){
-        if (mode == R.id.navigation_home) {
+        if (mode == R.id.navigation_home || mode == R.id.navigation_notifications) {
             mTextMessage.setVisibility(View.VISIBLE);
-            mRandomButton.setVisibility(View.VISIBLE);
         }
         else {
             mTextMessage.setVisibility(View.GONE);
+        }
+
+        if (mode == R.id.navigation_home) {
+            mTextMessage.setText("Random a note");
+            mRandomButton.setVisibility(View.VISIBLE);
+        }
+        else {
             mRandomButton.setVisibility(View.GONE);
         }
 
@@ -61,6 +68,10 @@ public class MainReminder extends AppCompatActivity {
         }
         else {
             mAddTagButton.setVisibility(View.GONE);
+        }
+
+        if (mode == R.id.navigation_notifications) {
+            mTextMessage.setText("Querying Data ...");
         }
     }
 

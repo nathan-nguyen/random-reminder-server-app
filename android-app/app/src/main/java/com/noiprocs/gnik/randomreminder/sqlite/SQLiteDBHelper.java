@@ -13,7 +13,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
     public static final String EDGE_CHILD = "child";
 
     public static final String LEAF_TABLE_NAME = "leaf";
-    public static final String LEAF_TABLE_ID = "id";
+    public static final String LEAF_TABLE_ID = "_id";
     public static final String LEAF_PARENT = "parent";
     public static final String LEAF_CONTENT = "content";
 

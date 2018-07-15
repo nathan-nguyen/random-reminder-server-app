@@ -8,6 +8,11 @@ import android.util.Log;
 
 import com.noiprocs.gnik.randomreminder.core.MemoryAider;
 import com.noiprocs.gnik.randomreminder.core.MemoryAiderException;
+import com.noiprocs.gnik.randomreminder.model.Edge;
+import com.noiprocs.gnik.randomreminder.model.Leaf;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RandomReminder extends MemoryAider {
     private final String TAG = RandomReminder.class.getCanonicalName();
@@ -78,5 +83,41 @@ public class RandomReminder extends MemoryAider {
 
         this.addLeaf(parent, content);
         return rowId;
+    }
+
+    public List<Edge> getEdgeData() {
+        List<Edge> result = new ArrayList<>();
+
+        SQLiteDatabase database = new SQLiteDBHelper(mContext).getReadableDatabase();
+        Cursor structureCursor = database.rawQuery("select * from " + SQLiteDBHelper.EDGE_TABLE_NAME, null);
+        if (structureCursor.moveToFirst()) {
+            while (!structureCursor.isAfterLast()) {
+                String parent = structureCursor.getString(structureCursor.getColumnIndex(SQLiteDBHelper.EDGE_PARENT));
+                String child = structureCursor.getString(structureCursor.getColumnIndex(SQLiteDBHelper.EDGE_CHILD));
+
+                result.add(new Edge(parent, child));
+                structureCursor.moveToNext();
+            }
+        }
+        return result;
+    }
+
+    public List<Leaf> getLeafData() {
+        List<Leaf> result = new ArrayList<>();
+        SQLiteDatabase database = new SQLiteDBHelper(mContext).getReadableDatabase();
+
+        Cursor leafCursor = database.rawQuery("select * from " + SQLiteDBHelper.LEAF_TABLE_NAME, null);
+        if (leafCursor.moveToFirst()) {
+            while (!leafCursor.isAfterLast()) {
+                int id = leafCursor.getInt(leafCursor.getColumnIndex(SQLiteDBHelper.LEAF_TABLE_ID));
+                String parent = leafCursor.getString(leafCursor.getColumnIndex(SQLiteDBHelper.LEAF_PARENT));
+                String content = leafCursor.getString(leafCursor.getColumnIndex(SQLiteDBHelper.LEAF_CONTENT));
+
+                result.add(new Leaf(id, parent, content));
+                leafCursor.moveToNext();
+            }
+        }
+
+        return result;
     }
 }
