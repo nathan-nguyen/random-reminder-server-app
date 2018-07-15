@@ -8,4 +8,9 @@ public class Edge {
         this.parent = parent;
         this.child = child;
     }
+
+    @Override
+    public String toString(){
+        return parent + " - " + child;
+    }
 }

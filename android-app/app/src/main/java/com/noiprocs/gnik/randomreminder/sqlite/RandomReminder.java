@@ -120,4 +120,18 @@ public class RandomReminder extends MemoryAider {
 
         return result;
     }
+
+    public List<String> getData() {
+        List<String> result = new ArrayList<>();
+
+        for (Edge e: getEdgeData()) {
+            result.add(e.toString());
+        }
+
+        for (Leaf l: getLeafData()) {
+            result.add(l.toString());
+        }
+
+        return result;
+    }
 }

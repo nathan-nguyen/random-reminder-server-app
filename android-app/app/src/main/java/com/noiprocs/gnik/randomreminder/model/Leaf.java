@@ -10,4 +10,9 @@ public class Leaf {
         this.parent = parent;
         this.leaf = leaf;
     }
+
+    @Override
+    public String toString() {
+        return id + " - " + parent + " - " + leaf;
+    }
 }

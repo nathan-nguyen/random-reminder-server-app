@@ -65,12 +65,11 @@ public abstract class MemoryAider {
 	protected void addParentChild(String parent, String child) {
         MemoryTag parentNode = tagList.get(parent);
         if (parentNode == null) {
-            LOGGER.info("Parent does not exist: " + parent);
             parentNode = new MemoryTag(parent);
             tagList.put(parent, parentNode);
         }
 
-        LOGGER.info("child: " + child);
+        LOGGER.info("parent: " + parent + " - child: " + child);
         MemoryTag childNode = tagList.get(new MemoryTag(child));
 
         if (childNode == null) {
@@ -84,7 +83,10 @@ public abstract class MemoryAider {
 
     protected void addLeaf(String parent, String content) throws MemoryAiderException {
         MemoryTag parentNode = tagList.get(parent);
-        if (parentNode == null) throw new MemoryAiderException("Parent does not exist: " + parent);
+        if (parentNode == null) {
+            LOGGER.info("Parent does not exist: " + parent);
+            return;
+        }
 
         MemoryLeaf childNode = new MemoryLeaf(content);
         parentNode.addChild(childNode);
