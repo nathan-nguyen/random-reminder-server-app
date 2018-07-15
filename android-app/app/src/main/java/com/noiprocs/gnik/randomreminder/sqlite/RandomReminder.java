@@ -1,4 +1,4 @@
-package com.noiprocs.gnik.randomreminder;
+package com.noiprocs.gnik.randomreminder.sqlite;
 
 import android.content.Context;
 import android.database.Cursor;

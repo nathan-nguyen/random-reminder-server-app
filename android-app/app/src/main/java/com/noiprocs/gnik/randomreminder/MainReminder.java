@@ -1,4 +1,4 @@
-package com.noiprocs.gnik.randomreminder.sqlite;
+package com.noiprocs.gnik.randomreminder;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,9 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.noiprocs.gnik.randomreminder.R;
-import com.noiprocs.gnik.randomreminder.RandomReminder;
-import com.noiprocs.gnik.randomreminder.core.MemoryAider;
+import com.noiprocs.gnik.randomreminder.sqlite.RandomReminder;
 import com.noiprocs.gnik.randomreminder.core.MemoryAiderException;
 
 import java.io.InputStream;
