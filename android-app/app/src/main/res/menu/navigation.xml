@@ -8,12 +8,12 @@
 
     <item
         android:id="@+id/navigation_add_leaf"
-        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:icon="@drawable/ic_speaker_notes_black_24dp"
         android:title="@string/title_add_leaf" />
 
     <item
         android:id="@+id/navigation_add_tag"
-        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:icon="@drawable/ic_label_black_24dp"
         android:title="@string/title_add_tag" />
 
     <item
