@@ -41,7 +41,9 @@ public class MainReminderActivity extends AppCompatActivity {
     private void toggleUI(int mode){
         if (mode == R.id.navigation_home) {
             mTextMessage.setVisibility(View.VISIBLE);
+            mTextMessage.setText("Random a note");
             mRandomButton.setVisibility(View.VISIBLE);
+            this.loadMemoryAider();
         }
         else {
             mRandomButton.setVisibility(View.GONE);
@@ -73,9 +75,7 @@ public class MainReminderActivity extends AppCompatActivity {
 
         if (mode == R.id.navigation_notifications) {
             mRecycleView.setVisibility(View.VISIBLE);
-            mDataSet.clear();
-            mDataSet.addAll(mMemoryAider.getData());
-            mDataAdapter.notifyDataSetChanged();
+            reloadRecycleView();
         }
         else {
             mRecycleView.setVisibility(View.GONE);
@@ -101,14 +101,7 @@ public class MainReminderActivity extends AppCompatActivity {
 
         toggleUI(R.id.navigation_home);
 
-        try {
-            this.getBaseContext().deleteDatabase("memory_aider_database");
-            mMemoryAider = new RandomReminder(this.getApplicationContext());
-            mMemoryAider.loadData();
-        } catch (Exception e) {
-            mTextMessage.setText(e.toString());
-            return;
-        }
+        if (!loadMemoryAider()) return;
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         mRecycleView.setLayoutManager(linearLayoutManager);
@@ -158,11 +151,48 @@ public class MainReminderActivity extends AppCompatActivity {
             }
             this.hideKeyboard();
         });
+
+        mDataAdapter.setOnButtonClick((v) -> {
+            int result = -1;
+            if (v.length == 2) {
+                result = mMemoryAider.deleteEdge(v);
+            }
+            else if (v.length == 3) {
+                result = mMemoryAider.deleteLeaf(v[0], v[1]);
+            }
+
+            if (result > 0) {
+                Toast.makeText(getApplicationContext(), "Record deleted successfully!", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Toast.makeText(getApplicationContext(), "Error when trying to delete record!", Toast.LENGTH_SHORT).show();
+            }
+
+            reloadRecycleView();
+        });
     }
 
     private void hideKeyboard(){
         InputMethodManager imm = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
         View view = this.getCurrentFocus();
         if (view != null) imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    private void reloadRecycleView(){
+        mDataSet.clear();
+        mDataSet.addAll(mMemoryAider.getData());
+        mDataAdapter.notifyDataSetChanged();
+    }
+
+    private boolean loadMemoryAider() {
+        try {
+            this.getBaseContext().deleteDatabase("memory_aider_database");
+            mMemoryAider = new RandomReminder(this.getApplicationContext());
+            mMemoryAider.loadData();
+            return true;
+        } catch (Exception e) {
+            mTextMessage.setText(e.toString());
+            return false;
+        }
     }
 }

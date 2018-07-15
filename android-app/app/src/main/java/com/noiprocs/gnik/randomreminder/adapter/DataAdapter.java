@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -35,11 +36,10 @@ public class DataAdapter extends RecyclerView.Adapter {
 
         ViewHolder viewHolder = (ViewHolder) holder;
 
-        viewHolder.mLayout.setOnClickListener((v) -> {
-//            mOnButtonClick.onClick(item.getId());
-        });
-
         viewHolder.mLabel.setText(item);
+        viewHolder.mImageButton.setOnClickListener((v) -> {
+            mOnButtonClick.onClick(item.split(" - "));
+        });
     }
 
     @Override
@@ -48,15 +48,14 @@ public class DataAdapter extends RecyclerView.Adapter {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-
-        RelativeLayout mLayout;
         TextView mLabel;
+        ImageButton mImageButton;
 
         ViewHolder(View v){
             super(v);
 
-            this.mLayout = v.findViewById(R.id.display_data_view_item);
             this.mLabel = v.findViewById(R.id.display_data_view_item_label);
+            this.mImageButton = v.findViewById(R.id.display_data_view_item_delete_button);
         }
     }
 
@@ -65,6 +64,6 @@ public class DataAdapter extends RecyclerView.Adapter {
     }
 
     public interface OnViewButtonClick {
-        void onClick(final String coinId);
+        void onClick(final String[] data);
     }
 }

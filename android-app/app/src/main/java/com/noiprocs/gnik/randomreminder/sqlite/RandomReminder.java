@@ -134,4 +134,14 @@ public class RandomReminder extends MemoryAider {
 
         return result;
     }
+
+    public int deleteEdge(String... data){
+        SQLiteDatabase database = new SQLiteDBHelper(mContext).getReadableDatabase();
+        return database.delete(SQLiteDBHelper.EDGE_TABLE_NAME, SQLiteDBHelper.EDGE_PARENT + " = ? AND " + SQLiteDBHelper.EDGE_CHILD + " = ?", data);
+    }
+
+    public int deleteLeaf(String... data) {
+        SQLiteDatabase database = new SQLiteDBHelper(mContext).getReadableDatabase();
+        return database.delete(SQLiteDBHelper.LEAF_TABLE_NAME, SQLiteDBHelper.LEAF_TABLE_ID + " = ? AND " + SQLiteDBHelper.LEAF_PARENT + " = ?", data );
+    }
 }
