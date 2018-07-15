@@ -1,6 +1,10 @@
 package com.noiprocs.gnik.randomreminder;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -15,8 +19,10 @@ import android.widget.Toast;
 
 import com.noiprocs.gnik.randomreminder.adapter.DataAdapter;
 import com.noiprocs.gnik.randomreminder.core.MemoryAiderException;
+import com.noiprocs.gnik.randomreminder.service.RandomReminderReceiver;
 import com.noiprocs.gnik.randomreminder.sqlite.RandomReminder;
 
+import java.util.Collections;
 import java.util.List;
 
 public class MainReminderActivity extends AppCompatActivity {
@@ -110,6 +116,7 @@ public class MainReminderActivity extends AppCompatActivity {
         mRecycleView.setAdapter(mDataAdapter);
 
         this.registerEvent();
+        this.setupService();
     }
 
     private void registerEvent() {
@@ -181,12 +188,12 @@ public class MainReminderActivity extends AppCompatActivity {
     private void reloadRecycleView(){
         mDataSet.clear();
         mDataSet.addAll(mMemoryAider.getData());
+        Collections.sort(mDataSet);
         mDataAdapter.notifyDataSetChanged();
     }
 
     private boolean loadMemoryAider() {
         try {
-            this.getBaseContext().deleteDatabase("memory_aider_database");
             mMemoryAider = new RandomReminder(this.getApplicationContext());
             mMemoryAider.loadData();
             return true;
@@ -194,5 +201,14 @@ public class MainReminderActivity extends AppCompatActivity {
             mTextMessage.setText(e.toString());
             return false;
         }
+    }
+
+    private void setupService() {
+        Intent notifyIntent = new Intent(this,RandomReminderReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast
+                (getApplicationContext(), 0 /* Request code */, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,  System.currentTimeMillis(),
+                1000 * 60 * 30, pendingIntent);
     }
 }
