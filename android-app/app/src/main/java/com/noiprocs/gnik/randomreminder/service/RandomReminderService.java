@@ -40,9 +40,7 @@ public class RandomReminderService extends IntentService {
         Notification.Builder builder = new Notification.Builder(this);
         try {
             String message = mRandomReminder.getRandomLeaf();
-            builder.setContentTitle("Random reminder");
-            builder.setContentText(message);
-            builder.setSmallIcon(R.mipmap.ic_launcher_round);
+            builder.setContentTitle("Random reminder").setContentText(message).setSmallIcon(R.mipmap.ic_launcher_round);
             Intent notifyIntent = new Intent(this, MainReminderActivity.class);
 
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, notifyIntent, PendingIntent.FLAG_ONE_SHOT);

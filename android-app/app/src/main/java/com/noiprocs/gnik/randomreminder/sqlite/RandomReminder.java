@@ -12,6 +12,7 @@ import com.noiprocs.gnik.randomreminder.model.Edge;
 import com.noiprocs.gnik.randomreminder.model.Leaf;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class RandomReminder extends MemoryAider {
@@ -124,12 +125,22 @@ public class RandomReminder extends MemoryAider {
     public List<String> getData() {
         List<String> result = new ArrayList<>();
 
-        for (Edge e: getEdgeData()) {
-            result.add(e.toString());
+        List<Leaf> leafList = getLeafData();
+        Collections.sort(leafList, (u, v) -> {
+            if (u.getParent().equals(v.getParent())) {
+                return Integer.compare(u.getId(), v.getId());
+            }
+            else return u.getParent().compareTo(v.getParent());
+        });
+        for (Leaf l: leafList) {
+            result.add(l.toString());
         }
 
-        for (Leaf l: getLeafData()) {
-            result.add(l.toString());
+        List<Edge> edgeList = getEdgeData();
+        Collections.sort(edgeList, (u, v) -> u.getParent().compareTo(v.getParent()));
+
+        for (Edge e: edgeList) {
+            result.add(e.toString());
         }
 
         return result;

@@ -13,4 +13,12 @@ public class Edge {
     public String toString(){
         return parent + " - " + child;
     }
+
+    public String getParent() {
+        return parent;
+    }
+
+    public String getChild() {
+        return child;
+    }
 }

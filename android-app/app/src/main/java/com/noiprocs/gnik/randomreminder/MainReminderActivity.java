@@ -22,7 +22,6 @@ import com.noiprocs.gnik.randomreminder.core.MemoryAiderException;
 import com.noiprocs.gnik.randomreminder.service.RandomReminderReceiver;
 import com.noiprocs.gnik.randomreminder.sqlite.RandomReminder;
 
-import java.util.Collections;
 import java.util.List;
 
 public class MainReminderActivity extends AppCompatActivity {
@@ -188,7 +187,6 @@ public class MainReminderActivity extends AppCompatActivity {
     private void reloadRecycleView(){
         mDataSet.clear();
         mDataSet.addAll(mMemoryAider.getData());
-        Collections.sort(mDataSet);
         mDataAdapter.notifyDataSetChanged();
     }
 

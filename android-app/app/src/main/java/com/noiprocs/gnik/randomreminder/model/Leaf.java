@@ -11,7 +11,32 @@ public class Leaf {
         this.leaf = leaf;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getParent() {
+        return parent;
+    }
+
+    public void setParent(String parent) {
+        this.parent = parent;
+    }
+
+    public String getLeaf() {
+        return leaf;
+    }
+
+    public void setLeaf(String leaf) {
+        this.leaf = leaf;
+    }
+
     @Override
+
     public String toString() {
         return id + " - " + parent + " - " + leaf;
     }
