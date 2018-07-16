@@ -12,6 +12,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -29,7 +31,7 @@ public class MainReminderActivity extends AppCompatActivity {
     private TextView mTextMessage;
     private RandomReminder mMemoryAider;
     private Button mRandomButton;
-    private EditText mParentEditText;
+    private AutoCompleteTextView mParentEditText;
     private EditText mChildContentEditText;
     private Button mAddLeafButton;
     private Button mAddTagButton;
@@ -58,6 +60,7 @@ public class MainReminderActivity extends AppCompatActivity {
         if (mode == R.id.navigation_add_leaf || mode == R.id.navigation_add_tag) {
             mParentEditText.setVisibility(View.VISIBLE);
             mChildContentEditText.setVisibility(View.VISIBLE);
+            mParentEditText.setAdapter(new ArrayAdapter<>(this, android.R.layout.select_dialog_item, mMemoryAider.getTagList()));
         }
         else {
             mParentEditText.setVisibility(View.GONE);

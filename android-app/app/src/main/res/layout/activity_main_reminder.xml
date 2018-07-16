@@ -31,7 +31,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/message"/>
 
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/parentEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

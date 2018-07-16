@@ -13,12 +13,15 @@ import com.noiprocs.gnik.randomreminder.model.Leaf;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 public class RandomReminder extends MemoryAider {
     private final String TAG = RandomReminder.class.getCanonicalName();
 
     private final Context mContext;
+    private List<Edge> edgeList = new ArrayList<>();
+    private List<Leaf> leafList = new ArrayList<>();
 
     public RandomReminder(Context context){
         this.mContext = context;
@@ -57,6 +60,9 @@ public class RandomReminder extends MemoryAider {
                 leafCursor.moveToNext();
             }
         }
+
+        updateEdgeData();
+        updateLeafData();
     }
 
     public long addTag(String parent, String child){
@@ -86,9 +92,8 @@ public class RandomReminder extends MemoryAider {
         return rowId;
     }
 
-    public List<Edge> getEdgeData() {
-        List<Edge> result = new ArrayList<>();
-
+    private void updateEdgeData() {
+        edgeList.clear();
         SQLiteDatabase database = new SQLiteDBHelper(mContext).getReadableDatabase();
         Cursor structureCursor = database.rawQuery("select * from " + SQLiteDBHelper.EDGE_TABLE_NAME, null);
         if (structureCursor.moveToFirst()) {
@@ -96,15 +101,14 @@ public class RandomReminder extends MemoryAider {
                 String parent = structureCursor.getString(structureCursor.getColumnIndex(SQLiteDBHelper.EDGE_PARENT));
                 String child = structureCursor.getString(structureCursor.getColumnIndex(SQLiteDBHelper.EDGE_CHILD));
 
-                result.add(new Edge(parent, child));
+                edgeList.add(new Edge(parent, child));
                 structureCursor.moveToNext();
             }
         }
-        return result;
     }
 
-    public List<Leaf> getLeafData() {
-        List<Leaf> result = new ArrayList<>();
+    private void updateLeafData() {
+        leafList.clear();
         SQLiteDatabase database = new SQLiteDBHelper(mContext).getReadableDatabase();
 
         Cursor leafCursor = database.rawQuery("select * from " + SQLiteDBHelper.LEAF_TABLE_NAME, null);
@@ -114,18 +118,25 @@ public class RandomReminder extends MemoryAider {
                 String parent = leafCursor.getString(leafCursor.getColumnIndex(SQLiteDBHelper.LEAF_PARENT));
                 String content = leafCursor.getString(leafCursor.getColumnIndex(SQLiteDBHelper.LEAF_CONTENT));
 
-                result.add(new Leaf(id, parent, content));
+                leafList.add(new Leaf(id, parent, content));
                 leafCursor.moveToNext();
             }
         }
+    }
 
+    public List<String> getTagList() {
+        HashSet<String> set = new HashSet<>();
+        for (Edge e: edgeList) {
+            set.add(e.getParent());
+            set.add(e.getChild());
+        }
+        List<String> result = new ArrayList<>(set);
         return result;
     }
 
     public List<String> getData() {
         List<String> result = new ArrayList<>();
 
-        List<Leaf> leafList = getLeafData();
         Collections.sort(leafList, (u, v) -> {
             if (u.getParent().equals(v.getParent())) {
                 return Integer.compare(u.getId(), v.getId());
@@ -136,7 +147,6 @@ public class RandomReminder extends MemoryAider {
             result.add(l.toString());
         }
 
-        List<Edge> edgeList = getEdgeData();
         Collections.sort(edgeList, (u, v) -> u.getParent().compareTo(v.getParent()));
 
         for (Edge e: edgeList) {
@@ -148,11 +158,17 @@ public class RandomReminder extends MemoryAider {
 
     public int deleteEdge(String... data){
         SQLiteDatabase database = new SQLiteDBHelper(mContext).getReadableDatabase();
-        return database.delete(SQLiteDBHelper.EDGE_TABLE_NAME, SQLiteDBHelper.EDGE_PARENT + " = ? AND " + SQLiteDBHelper.EDGE_CHILD + " = ?", data);
+        int result = database.delete(SQLiteDBHelper.EDGE_TABLE_NAME, SQLiteDBHelper.EDGE_PARENT + " = ? AND " + SQLiteDBHelper.EDGE_CHILD + " = ?", data);
+
+        updateEdgeData();
+        return result;
     }
 
     public int deleteLeaf(String... data) {
         SQLiteDatabase database = new SQLiteDBHelper(mContext).getReadableDatabase();
-        return database.delete(SQLiteDBHelper.LEAF_TABLE_NAME, SQLiteDBHelper.LEAF_TABLE_ID + " = ? AND " + SQLiteDBHelper.LEAF_PARENT + " = ?", data );
+        int result = database.delete(SQLiteDBHelper.LEAF_TABLE_NAME, SQLiteDBHelper.LEAF_TABLE_ID + " = ? AND " + SQLiteDBHelper.LEAF_PARENT + " = ?", data );
+
+        updateLeafData();
+        return result;
     }
 }
