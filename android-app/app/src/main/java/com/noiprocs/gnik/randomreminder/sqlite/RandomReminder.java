@@ -66,6 +66,7 @@ public class RandomReminder extends MemoryAider {
     }
 
     public long addTag(String parent, String child){
+        if (parent.length() == 0 || child.length() == 0) return -1;
         SQLiteDatabase database = new SQLiteDBHelper(mContext).getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(SQLiteDBHelper.EDGE_PARENT, parent);
@@ -81,6 +82,7 @@ public class RandomReminder extends MemoryAider {
     }
 
     public long addContent(String parent, String content) throws MemoryAiderException{
+        if (parent.length() == 0 || content.length() == 0) return -1;
         SQLiteDatabase database = new SQLiteDBHelper(mContext).getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(SQLiteDBHelper.LEAF_PARENT, parent);

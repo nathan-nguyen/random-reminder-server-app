@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -41,9 +43,9 @@ public class MainReminderActivity extends AppCompatActivity {
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = item -> {
-                toggleUI(item.getItemId());
-                return true;
-            };
+        toggleUI(item.getItemId());
+        return true;
+    };
 
     private void toggleUI(int mode){
         if (mode == R.id.navigation_home) {
@@ -162,22 +164,12 @@ public class MainReminderActivity extends AppCompatActivity {
         });
 
         mDataAdapter.setOnButtonClick((v) -> {
-            int result = -1;
-            if (v.length == 2) {
-                result = mMemoryAider.deleteEdge(v);
-            }
-            else if (v.length == 3) {
-                result = mMemoryAider.deleteLeaf(v[0], v[1]);
-            }
-
-            if (result > 0) {
-                Toast.makeText(getApplicationContext(), "Record deleted successfully!", Toast.LENGTH_SHORT).show();
-            }
-            else {
-                Toast.makeText(getApplicationContext(), "Error when trying to delete record!", Toast.LENGTH_SHORT).show();
-            }
-
-            reloadRecycleView();
+            new AlertDialog.Builder(this)
+                    .setTitle("Delete")
+                    .setMessage("Do you really want to delete:\n" + v[v.length - 2] + " - " + v[v.length - 1])
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> deleteData(v))
+                    .setNegativeButton(android.R.string.no, null).show();
         });
     }
 
@@ -210,6 +202,25 @@ public class MainReminderActivity extends AppCompatActivity {
                 (getApplicationContext(), 0 /* Request code */, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,  System.currentTimeMillis(),
-                1000 * 60 * 30, pendingIntent);
+                1000 * 60 * 15, pendingIntent);
+    }
+
+    private void deleteData(String[] v) {
+        int result = -1;
+        if (v.length == 2) {
+            result = mMemoryAider.deleteEdge(v);
+        }
+        else if (v.length == 3) {
+            result = mMemoryAider.deleteLeaf(v[0], v[1]);
+        }
+
+        if (result > 0) {
+            Toast.makeText(getApplicationContext(), "Record deleted successfully!", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Toast.makeText(getApplicationContext(), "Error when trying to delete record!", Toast.LENGTH_SHORT).show();
+        }
+
+        reloadRecycleView();
     }
 }
