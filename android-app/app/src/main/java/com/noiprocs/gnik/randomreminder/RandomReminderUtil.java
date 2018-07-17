@@ -21,4 +21,13 @@ public class RandomReminderUtil {
         EDITOR.putBoolean(key, value);
         EDITOR.commit();
     }
+
+    public static int getInt(String key) {
+        return RandomReminderUtil.PREFERENCE.getInt(key, 0);
+    }
+
+    public static void setInt(String key, int value) {
+        EDITOR.putInt(key, value);
+        EDITOR.commit();
+    }
 }

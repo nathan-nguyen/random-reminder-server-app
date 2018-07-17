@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.noiprocs.gnik.randomreminder.layout.setting.SettingConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<com.noiprocs.gnik.randomreminder.layout.setting.SettingConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
+        android:id="@+id/main_setting_display_edge_relative_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_parent_rounded_corner">
@@ -27,4 +29,28 @@
             android:layout_alignParentEnd="true" />
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/main_setting_notification_interval_relative_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/main_setting_display_edge_relative_layout"
+        android:background="@drawable/bg_parent_rounded_corner">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="@string/main_setting_notification_interval_text"/>
+
+        <com.noiprocs.gnik.randomreminder.layout.setting.IntervalNumberPicker
+            android:id="@+id/main_setting_notification_numberpicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"/>
+    </RelativeLayout>
 </com.noiprocs.gnik.randomreminder.layout.setting.SettingConstraintLayout>

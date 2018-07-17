@@ -1,10 +1,7 @@
 package com.noiprocs.gnik.randomreminder;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -19,7 +16,6 @@ import android.widget.Toast;
 
 import com.noiprocs.gnik.randomreminder.core.MemoryAiderException;
 import com.noiprocs.gnik.randomreminder.layout.notification.NotificationRecycleView;
-import com.noiprocs.gnik.randomreminder.service.RandomReminderReceiver;
 import com.noiprocs.gnik.randomreminder.layout.setting.SettingConstraintLayout;
 import com.noiprocs.gnik.randomreminder.sqlite.RandomReminder;
 
@@ -44,7 +40,7 @@ public class MainReminderActivity extends AppCompatActivity {
     private void toggleUI(int mode) {
         if (mode == R.id.navigation_home) {
             mTextMessage.setVisibility(View.VISIBLE);
-            mTextMessage.setText(getResources().getText(R.string.main_home_default_text));
+            mTextMessage.setText(getResources().getText(R.string.main_home_info_label_default_text));
             mRandomButton.setVisibility(View.VISIBLE);
             this.loadMemoryAider();
         } else {
@@ -106,18 +102,18 @@ public class MainReminderActivity extends AppCompatActivity {
         mAddTagButton = findViewById(R.id.addTagButton);
         mNotificationRecycleView = findViewById(R.id.recycleView);
         mSettingConstraintLayout = findViewById(R.id.main_setting_layout);
-        mSettingConstraintLayout.initializeLayout();
 
         toggleUI(R.id.navigation_home);
 
         if (!loadMemoryAider()) return;
 
         mNotificationRecycleView.initializeLayout(mMemoryAider);
+        mSettingConstraintLayout.initializeLayout();
 
         this.registerEvent();
-        this.setupService();
     }
 
+    @SuppressLint("ShowToast")
     private void registerEvent() {
         mRandomButton.setOnClickListener((v) -> {
             try {
@@ -174,14 +170,5 @@ public class MainReminderActivity extends AppCompatActivity {
             mTextMessage.setText(e.toString());
             return false;
         }
-    }
-
-    private void setupService() {
-        Intent notifyIntent = new Intent(this, RandomReminderReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast
-                (getApplicationContext(), 0 /* Request code */, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager alarmManager = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),
-                1000 * 60 * 15, pendingIntent);
     }
 }
