@@ -77,7 +77,7 @@ public class RandomReminder extends MemoryAider {
         Log.i(TAG, "insert " + parent + " - " + child + " - Result: " + rowId);
 
         this.addParentChild(parent, child);
-
+        updateEdgeData();
         return rowId;
     }
 
@@ -91,6 +91,7 @@ public class RandomReminder extends MemoryAider {
         long rowId = database.insert(SQLiteDBHelper.LEAF_TABLE_NAME, null, values);
 
         this.addLeaf(parent, content);
+        updateLeafData();
         return rowId;
     }
 
@@ -136,7 +137,7 @@ public class RandomReminder extends MemoryAider {
         return result;
     }
 
-    public List<String> getData() {
+    public List<String> getData(boolean displayEdge) {
         List<String> result = new ArrayList<>();
 
         Collections.sort(leafList, (u, v) -> {
@@ -147,6 +148,10 @@ public class RandomReminder extends MemoryAider {
         });
         for (Leaf l: leafList) {
             result.add(l.toString());
+        }
+
+        if (!displayEdge) {
+            return result;
         }
 
         Collections.sort(edgeList, (u, v) -> u.getParent().compareTo(v.getParent()));

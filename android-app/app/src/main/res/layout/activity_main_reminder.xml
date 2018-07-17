@@ -92,6 +92,9 @@
         app:layout_constraintBottom_toTopOf="@+id/navigation">
     </android.support.v7.widget.RecyclerView>
 
+    <include layout="@layout/main_setting"
+        android:id="@+id/main_setting_layout"/>
+
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"
         android:layout_width="0dp"

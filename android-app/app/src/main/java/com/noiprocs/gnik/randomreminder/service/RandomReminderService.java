@@ -44,7 +44,7 @@ public class RandomReminderService extends IntentService {
             Intent notifyIntent = new Intent(this, MainReminderActivity.class);
 
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, notifyIntent, PendingIntent.FLAG_ONE_SHOT);
-            builder.setContentIntent(pendingIntent);
+            builder.setContentIntent(pendingIntent).setDefaults(Notification.DEFAULT_VIBRATE).setAutoCancel(true);
             Notification notification = builder.build();
             NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
             managerCompat.notify(NOTIFICATION_ID, notification);
