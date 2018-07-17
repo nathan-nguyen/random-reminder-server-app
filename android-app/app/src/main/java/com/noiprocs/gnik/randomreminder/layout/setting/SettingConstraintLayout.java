@@ -1,4 +1,4 @@
-package com.noiprocs.gnik.randomreminder.setting;
+package com.noiprocs.gnik.randomreminder.layout.setting;
 
 import android.content.Context;
 import android.support.constraint.ConstraintLayout;

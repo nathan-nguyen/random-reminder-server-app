@@ -7,10 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
@@ -20,13 +17,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.noiprocs.gnik.randomreminder.adapter.DataAdapter;
 import com.noiprocs.gnik.randomreminder.core.MemoryAiderException;
+import com.noiprocs.gnik.randomreminder.layout.notification.NotificationRecycleView;
 import com.noiprocs.gnik.randomreminder.service.RandomReminderReceiver;
-import com.noiprocs.gnik.randomreminder.setting.SettingConstraintLayout;
+import com.noiprocs.gnik.randomreminder.layout.setting.SettingConstraintLayout;
 import com.noiprocs.gnik.randomreminder.sqlite.RandomReminder;
-
-import java.util.List;
 
 public class MainReminderActivity extends AppCompatActivity {
 
@@ -37,9 +32,7 @@ public class MainReminderActivity extends AppCompatActivity {
     private EditText mChildContentEditText;
     private Button mAddLeafButton;
     private Button mAddTagButton;
-    private RecyclerView mRecycleView;
-    private List<String> mDataSet;
-    private DataAdapter mDataAdapter;
+    private NotificationRecycleView mNotificationRecycleView;
     private SettingConstraintLayout mSettingConstraintLayout;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -51,7 +44,7 @@ public class MainReminderActivity extends AppCompatActivity {
     private void toggleUI(int mode) {
         if (mode == R.id.navigation_home) {
             mTextMessage.setVisibility(View.VISIBLE);
-            mTextMessage.setText("Random a note");
+            mTextMessage.setText(getResources().getText(R.string.main_home_default_text));
             mRandomButton.setVisibility(View.VISIBLE);
             this.loadMemoryAider();
         } else {
@@ -81,10 +74,10 @@ public class MainReminderActivity extends AppCompatActivity {
         }
 
         if (mode == R.id.navigation_notifications) {
-            mRecycleView.setVisibility(View.VISIBLE);
-            reloadRecycleView();
+            mNotificationRecycleView.setVisibility(View.VISIBLE);
+            mNotificationRecycleView.reloadRecycleView();
         } else {
-            mRecycleView.setVisibility(View.GONE);
+            mNotificationRecycleView.setVisibility(View.GONE);
         }
 
         if (mode == R.id.navigation_setting) {
@@ -111,7 +104,7 @@ public class MainReminderActivity extends AppCompatActivity {
         mRandomButton = findViewById(R.id.randomButton);
         mAddLeafButton = findViewById(R.id.addLeafButton);
         mAddTagButton = findViewById(R.id.addTagButton);
-        mRecycleView = findViewById(R.id.recycleView);
+        mNotificationRecycleView = findViewById(R.id.recycleView);
         mSettingConstraintLayout = findViewById(R.id.main_setting_layout);
         mSettingConstraintLayout.initializeLayout();
 
@@ -119,11 +112,7 @@ public class MainReminderActivity extends AppCompatActivity {
 
         if (!loadMemoryAider()) return;
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-        mRecycleView.setLayoutManager(linearLayoutManager);
-        mDataSet = mMemoryAider.getData(RandomReminderUtil.getBoolean(getResources().getString(R.string.key_display_edge)));
-        mDataAdapter = new DataAdapter(mDataSet);
-        mRecycleView.setAdapter(mDataAdapter);
+        mNotificationRecycleView.initializeLayout(mMemoryAider);
 
         this.registerEvent();
         this.setupService();
@@ -167,26 +156,13 @@ public class MainReminderActivity extends AppCompatActivity {
             this.hideKeyboard();
         });
 
-        mDataAdapter.setOnButtonClick((v) -> {
-            new AlertDialog.Builder(this)
-                    .setTitle("Delete")
-                    .setMessage("Do you really want to delete:\n" + v[v.length - 2] + " - " + v[v.length - 1])
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> deleteData(v))
-                    .setNegativeButton(android.R.string.no, null).show();
-        });
+
     }
 
     private void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
         View view = this.getCurrentFocus();
         if (view != null) imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
-
-    private void reloadRecycleView() {
-        mDataSet.clear();
-        mDataSet.addAll(mMemoryAider.getData(RandomReminderUtil.getBoolean(getResources().getString(R.string.key_display_edge))));
-        mDataAdapter.notifyDataSetChanged();
     }
 
     private boolean loadMemoryAider() {
@@ -207,22 +183,5 @@ public class MainReminderActivity extends AppCompatActivity {
         AlarmManager alarmManager = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),
                 1000 * 60 * 15, pendingIntent);
-    }
-
-    private void deleteData(String[] v) {
-        int result = -1;
-        if (v.length == 2) {
-            result = mMemoryAider.deleteEdge(v);
-        } else if (v.length == 3) {
-            result = mMemoryAider.deleteLeaf(v[0], v[1]);
-        }
-
-        if (result > 0) {
-            Toast.makeText(getApplicationContext(), "Record deleted successfully!", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(getApplicationContext(), "Error when trying to delete record!", Toast.LENGTH_SHORT).show();
-        }
-
-        reloadRecycleView();
     }
 }

@@ -9,7 +9,8 @@
     <string name="title_setting">Setting</string>
 
     <!-- Home screen -->
-    <string name="actity_main_reminder_random_button_text">Random Reminder</string>
+    <string name="main_home_default_text">Random a note</string>
+    <string name="main_reminder_random_button_text">Random Reminder</string>
 
     <!-- Setting screen -->
     <string name="main_setting_display_edge_option">Display tags</string>
