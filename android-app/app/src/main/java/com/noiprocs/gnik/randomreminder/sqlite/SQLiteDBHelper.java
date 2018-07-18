@@ -17,7 +17,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
     public static final String LEAF_PARENT = "parent";
     public static final String LEAF_CONTENT = "content";
 
-    public SQLiteDBHelper(Context context){
+    SQLiteDBHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

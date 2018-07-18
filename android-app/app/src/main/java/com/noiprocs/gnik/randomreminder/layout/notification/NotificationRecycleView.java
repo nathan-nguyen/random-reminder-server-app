@@ -47,14 +47,12 @@ public class NotificationRecycleView extends RecyclerView {
     }
 
     private void registerEvent() {
-        mDataAdapter.setOnButtonClick((v) -> {
-            new AlertDialog.Builder(this.getContext())
+        mDataAdapter.setOnButtonClick((v) -> new AlertDialog.Builder(this.getContext())
                     .setTitle("Delete")
                     .setMessage("Do you really want to delete:\n" + v[v.length - 2] + " - " + v[v.length - 1])
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> deleteData(v))
-                    .setNegativeButton(android.R.string.no, null).show();
-        });
+                    .setNegativeButton(android.R.string.no, null).show());
     }
 
     private void deleteData(String[] v) {
@@ -71,7 +69,7 @@ public class NotificationRecycleView extends RecyclerView {
             Toast.makeText(getContext(), "Error when trying to delete record!", Toast.LENGTH_SHORT).show();
         }
 
-        this.reloadRecycleView();
+        reloadRecycleView();
     }
 
     public void reloadRecycleView() {

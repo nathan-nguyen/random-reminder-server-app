@@ -81,7 +81,7 @@ public abstract class MemoryAider {
         tagList.put(child, childNode);
     }
 
-    protected void addLeaf(String parent, String content) throws MemoryAiderException {
+    protected void addLeaf(String parent, String content) {
         MemoryTag parentNode = tagList.get(parent);
         if (parentNode == null) {
             LOGGER.info("Parent does not exist: " + parent);
@@ -97,7 +97,7 @@ public abstract class MemoryAider {
 	public String getRandomLeaf() throws MemoryAiderException {
 	    MemoryTag rootNode = tagList.get(Constant.ROOT);
 
-	    if (rootNode == null || rootNode.childCount == 0) return new String("No note");
+	    if (rootNode == null || rootNode.childCount == 0) return "No note";
 		return rootNode.getChild(MemoryAiderUtil.randomRange(rootNode.getChildCount()));
 	}
 }

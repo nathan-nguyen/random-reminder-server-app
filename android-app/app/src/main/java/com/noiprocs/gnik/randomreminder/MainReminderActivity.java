@@ -124,18 +124,13 @@ public class MainReminderActivity extends AppCompatActivity {
         });
 
         mAddLeafButton.setOnClickListener((v) -> {
-            try {
-                long rowId = mMemoryAider.addContent(mParentEditText.getText().toString(), mChildContentEditText.getText().toString());
-                if (rowId > 0) {
-                    Toast.makeText(getApplicationContext(), "Note added successfully!", Toast.LENGTH_SHORT).show();
-                    mParentEditText.getText().clear();
-                    mChildContentEditText.getText().clear();
-                } else {
-                    Toast.makeText(getApplicationContext(), "Cannot insert note into database!", Toast.LENGTH_SHORT).show();
-                }
-            } catch (MemoryAiderException e) {
-                e.printStackTrace();
-                Toast.makeText(getApplicationContext(), "Tag does not exist! Please create tag before adding note", Toast.LENGTH_SHORT).show();
+            long rowId = mMemoryAider.addContent(mParentEditText.getText().toString(), mChildContentEditText.getText().toString());
+            if (rowId > 0) {
+                Toast.makeText(getApplicationContext(), "Note added successfully!", Toast.LENGTH_SHORT).show();
+                mParentEditText.getText().clear();
+                mChildContentEditText.getText().clear();
+            } else {
+                Toast.makeText(getApplicationContext(), "Cannot insert note into database!", Toast.LENGTH_SHORT).show();
             }
             this.hideKeyboard();
         });
@@ -158,7 +153,7 @@ public class MainReminderActivity extends AppCompatActivity {
     private void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
         View view = this.getCurrentFocus();
-        if (view != null) imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        if (view != null && imm != null) imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     private boolean loadMemoryAider() {

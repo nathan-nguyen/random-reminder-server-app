@@ -7,7 +7,7 @@ public class MemoryTag extends MemoryNode {
 	private String tag;
 	private List<MemoryNode> childrenList = new LinkedList<>();
 
-	public MemoryTag(String tag){
+	MemoryTag(String tag){
 		this.tag = tag;
 	}
 

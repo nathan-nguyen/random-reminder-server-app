@@ -3,7 +3,7 @@ package com.noiprocs.gnik.randomreminder.core;
 public class MemoryLeaf extends MemoryNode {
 	private String content;
 
-	public MemoryLeaf(String content) {
+	MemoryLeaf(String content) {
 		this.content = content;
 	}
 

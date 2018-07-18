@@ -25,8 +25,7 @@ public class DataAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.display_data_view_item, parent, false);
-        ViewHolder viewHolder = new ViewHolder(v);
-        return viewHolder;
+        return new ViewHolder(v);
     }
 
     @Override
@@ -36,9 +35,7 @@ public class DataAdapter extends RecyclerView.Adapter {
         ViewHolder viewHolder = (ViewHolder) holder;
 
         viewHolder.mLabel.setText(item);
-        viewHolder.mImageButton.setOnClickListener((v) -> {
-            mOnButtonClick.onClick(item.split(" - "));
-        });
+        viewHolder.mImageButton.setOnClickListener((v) -> mOnButtonClick.onClick(item.split(" - ")));
     }
 
     @Override

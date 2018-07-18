@@ -27,16 +27,7 @@ public class Leaf {
         this.parent = parent;
     }
 
-    public String getLeaf() {
-        return leaf;
-    }
-
-    public void setLeaf(String leaf) {
-        this.leaf = leaf;
-    }
-
     @Override
-
     public String toString() {
         return id + " - " + parent + " - " + leaf;
     }

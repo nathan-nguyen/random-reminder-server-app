@@ -46,7 +46,7 @@ public class RandomReminder extends MemoryAider {
     }
 
     @Override
-    protected void loadContentData() throws MemoryAiderException {
+    protected void loadContentData() {
         SQLiteDatabase database = new SQLiteDBHelper(mContext).getReadableDatabase();
         Cursor leafCursor = database.rawQuery("select * from " + SQLiteDBHelper.LEAF_TABLE_NAME, null);
         if (leafCursor.moveToFirst()) {
@@ -81,7 +81,7 @@ public class RandomReminder extends MemoryAider {
         return rowId;
     }
 
-    public long addContent(String parent, String content) throws MemoryAiderException{
+    public long addContent(String parent, String content) {
         if (parent.length() == 0 || content.length() == 0) return -1;
         SQLiteDatabase database = new SQLiteDBHelper(mContext).getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -133,8 +133,7 @@ public class RandomReminder extends MemoryAider {
             set.add(e.getParent());
             set.add(e.getChild());
         }
-        List<String> result = new ArrayList<>(set);
-        return result;
+        return new ArrayList<>(set);
     }
 
     public List<String> getData(boolean displayEdge) {

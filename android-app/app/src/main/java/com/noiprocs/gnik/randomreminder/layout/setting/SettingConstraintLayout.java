@@ -15,7 +15,6 @@ import com.noiprocs.gnik.randomreminder.service.RandomReminderReceiver;
 
 public class SettingConstraintLayout extends ConstraintLayout {
 
-    private Switch mSwitch;
     private AlarmManager mAlarmManager;
     private PendingIntent mPendingIntent;
     private IntervalNumberPicker mIntervalNumberPicker;
@@ -33,7 +32,7 @@ public class SettingConstraintLayout extends ConstraintLayout {
     }
 
     public void initializeLayout() {
-        mSwitch = findViewById(R.id.main_setting_display_edge_switch);
+        Switch mSwitch = findViewById(R.id.main_setting_display_edge_switch);
         mIntervalNumberPicker = findViewById(R.id.main_setting_notification_numberpicker);
 
         mIntervalNumberPicker.setMinValue(RandomReminderConstant.MIN_NOTIFICATION_INTERVAL);
@@ -46,9 +45,7 @@ public class SettingConstraintLayout extends ConstraintLayout {
 
         this.setupService();
 
-        mSwitch.setOnCheckedChangeListener((compoundButton, isChecked) -> {
-            RandomReminderUtil.setBoolean(getResources().getString(R.string.key_display_edge), isChecked);
-        });
+        mSwitch.setOnCheckedChangeListener((compoundButton, isChecked) -> RandomReminderUtil.setBoolean(getResources().getString(R.string.key_display_edge), isChecked));
 
         mIntervalNumberPicker.setOnValueChangedListener((picker, oldVal, newVal) -> {
             RandomReminderUtil.setInt(getResources().getString(R.string.key_notification_interval), newVal);
