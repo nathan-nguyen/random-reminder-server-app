@@ -1,5 +1,6 @@
 package com.noiprocs.gnik.randomreminder.adapter;
 
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,8 +11,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.noiprocs.gnik.randomreminder.R;
-import com.noiprocs.gnik.randomreminder.model.Edge;
-import com.noiprocs.gnik.randomreminder.model.Leaf;
 import com.noiprocs.gnik.randomreminder.model.Node;
 
 import java.util.List;
@@ -40,6 +39,12 @@ public class DataAdapter extends RecyclerView.Adapter {
         ViewHolder viewHolder = (ViewHolder) holder;
 
         viewHolder.mLabel.setText(item.getParent() + " - " + item.getValue());
+        if (!item.isActivate()) {
+            viewHolder.mLabel.setTextColor(Color.LTGRAY);
+        }
+        else {
+            viewHolder.mLabel.setTextColor(Color.BLACK);
+        }
         viewHolder.mImageButton.setOnClickListener((v) -> mOnDeleteButtonClick.onClick(item));
         viewHolder.mRelativeLayout.setOnClickListener((v) -> mOnViewItemClick.onClick(item));
     }

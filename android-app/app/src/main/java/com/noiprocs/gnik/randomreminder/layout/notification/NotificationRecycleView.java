@@ -52,18 +52,18 @@ public class NotificationRecycleView extends RecyclerView {
     }
 
     private void registerEvent() {
-        mDataAdapter.setOnDeleteButtonClick((v) -> showDeleteItemDialog(v));
+        mDataAdapter.setOnDeleteButtonClick(this::showDeleteItemDialog);
 
-        mDataAdapter.setOnViewItemClick((v) -> displayItemInfoDialog(v));
+        mDataAdapter.setOnViewItemClick(this::displayItemInfoDialog);
     }
 
     private void deleteData(Node node) {
         int result = -1;
         if (node instanceof Edge) {
-            result = mRandomReminder.deleteEdge(node.getParent(), node.getValue());
+            result = mRandomReminder.deleteEdge((Edge) node);
         }
         else if (node instanceof Leaf) {
-            result = mRandomReminder.deleteLeaf(String.valueOf(((Leaf) node).getId()), node.getParent());
+            result = mRandomReminder.deleteLeaf((Leaf) node);
         }
 
         if (result > 0) {
@@ -96,7 +96,13 @@ public class NotificationRecycleView extends RecyclerView {
                 .setMessage(node.getValue())
                 .setIcon(R.drawable.ic_label_black_24dp).show();
 
-        ((Switch) dialog.findViewById(R.id.main_notification_item_dialog_switch)).setOnCheckedChangeListener((compoundButton, isChecked) -> System.out.println(isChecked));
+        ((Switch) dialog.findViewById(R.id.main_notification_item_dialog_switch)).setChecked(node.isActivate());
+        ((Switch) dialog.findViewById(R.id.main_notification_item_dialog_switch)).setOnCheckedChangeListener((compoundButton, isChecked) -> {
+            node.setActivate(isChecked ? 1 : 0);
+            // TODO: Change doesn't reflex immediately in DAG graph
+            mRandomReminder.updateNode(node);
+            reloadRecycleView();
+        });
         dialog.findViewById(R.id.main_notification_item_dialog_delete_button).setOnClickListener((v) -> {
             showDeleteItemDialog(node);
             dialog.dismiss();

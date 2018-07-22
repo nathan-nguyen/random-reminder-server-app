@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.noiprocs.gnik.randomreminder.core.MemoryAider;
-import com.noiprocs.gnik.randomreminder.core.MemoryAiderException;
 import com.noiprocs.gnik.randomreminder.model.Edge;
 import com.noiprocs.gnik.randomreminder.model.Leaf;
 import com.noiprocs.gnik.randomreminder.model.Node;
@@ -62,8 +61,8 @@ public class RandomReminder extends MemoryAider {
         }
 
         // TODO: This is a bad implementation since data is loaded twice
-        updateEdgeData();
-        updateLeafData();
+        queryEdgeData();
+        queryLeafData();
     }
 
     public long addTag(String parent, String child){
@@ -78,7 +77,7 @@ public class RandomReminder extends MemoryAider {
         Log.i(TAG, "insert " + parent + " - " + child + " - Result: " + rowId);
 
         this.addParentChild(parent, child);
-        updateEdgeData();
+        queryEdgeData();
         return rowId;
     }
 
@@ -92,14 +91,14 @@ public class RandomReminder extends MemoryAider {
         long rowId = database.insert(SQLiteDBHelper.LEAF_TABLE_NAME, null, values);
 
         this.addLeaf(parent, content);
-        updateLeafData();
+        queryLeafData();
         return rowId;
     }
 
     /**
-     * Update the current Edge dataset when database is changed
+     * Query the current Edge dataset when database is changed
      */
-    private void updateEdgeData() {
+    private void queryEdgeData() {
         edgeList.clear();
         SQLiteDatabase database = new SQLiteDBHelper(mContext).getReadableDatabase();
         Cursor structureCursor = database.rawQuery("select * from " + SQLiteDBHelper.EDGE_TABLE_NAME, null);
@@ -116,9 +115,9 @@ public class RandomReminder extends MemoryAider {
     }
 
     /**
-     * Update the current Leaf dataset when database is changed
+     * Query the current Leaf dataset when database is changed
      */
-    private void updateLeafData() {
+    private void queryLeafData() {
         leafList.clear();
         SQLiteDatabase database = new SQLiteDBHelper(mContext).getReadableDatabase();
 
@@ -168,19 +167,59 @@ public class RandomReminder extends MemoryAider {
         return result;
     }
 
-    public int deleteEdge(String... data){
+    public int deleteEdge(Edge edge){
+        String[] args = new String[]{edge.getParent(), edge.getChild()};
         SQLiteDatabase database = new SQLiteDBHelper(mContext).getReadableDatabase();
-        int result = database.delete(SQLiteDBHelper.EDGE_TABLE_NAME, SQLiteDBHelper.EDGE_PARENT + " = ? AND " + SQLiteDBHelper.EDGE_CHILD + " = ?", data);
+        int result = database.delete(SQLiteDBHelper.EDGE_TABLE_NAME, SQLiteDBHelper.EDGE_PARENT + " = ? AND " + SQLiteDBHelper.EDGE_CHILD + " = ?", args);
 
-        updateEdgeData();
+        queryEdgeData();
         return result;
     }
 
-    public int deleteLeaf(String... data) {
+    public int deleteLeaf(Leaf leaf) {
+        String[] args = new String[]{String.valueOf(leaf.getId()), leaf.getParent()};
         SQLiteDatabase database = new SQLiteDBHelper(mContext).getReadableDatabase();
-        int result = database.delete(SQLiteDBHelper.LEAF_TABLE_NAME, SQLiteDBHelper.LEAF_TABLE_ID + " = ? AND " + SQLiteDBHelper.LEAF_PARENT + " = ?", data );
+        int result = database.delete(SQLiteDBHelper.LEAF_TABLE_NAME, SQLiteDBHelper.LEAF_TABLE_ID + " = ? AND " + SQLiteDBHelper.LEAF_PARENT + " = ?", args );
 
-        updateLeafData();
+        queryLeafData();
+        return result;
+    }
+
+    public int updateNode(Node node) {
+        if (node instanceof Edge) {
+            return updateEdge((Edge) node);
+        }
+        else if (node instanceof Leaf) {
+            return updateLeaf((Leaf) node);
+        }
+        return -1;
+    }
+
+    private int updateEdge(Edge edge) {
+        String[] args = new String[]{edge.getParent(), edge.getChild()};
+        SQLiteDatabase database = new SQLiteDBHelper(mContext).getReadableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SQLiteDBHelper.EDGE_ACTIVATE, edge.isActivate());
+
+        int result = database.update(SQLiteDBHelper.EDGE_TABLE_NAME, contentValues,
+                SQLiteDBHelper.EDGE_PARENT + " = ?  AND " + SQLiteDBHelper.EDGE_CHILD + " = ?", args);
+
+        queryEdgeData();
+        return result;
+    }
+
+    private int updateLeaf(Leaf leaf) {
+        String[] args = new String[]{String.valueOf(leaf.getId()), leaf.getParent()};
+        SQLiteDatabase database = new SQLiteDBHelper(mContext).getReadableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SQLiteDBHelper.LEAF_ACTIVATE, leaf.isActivate());
+
+        int result = database.update(SQLiteDBHelper.LEAF_TABLE_NAME, contentValues,
+                SQLiteDBHelper.LEAF_TABLE_ID + " = ?  AND " + SQLiteDBHelper.LEAF_PARENT + " = ?", args);
+
+        queryLeafData();
         return result;
     }
 }
