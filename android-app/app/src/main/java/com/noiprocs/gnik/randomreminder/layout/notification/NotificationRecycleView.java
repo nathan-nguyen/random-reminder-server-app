@@ -1,5 +1,6 @@
 package com.noiprocs.gnik.randomreminder.layout.notification;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -48,11 +49,13 @@ public class NotificationRecycleView extends RecyclerView {
 
     private void registerEvent() {
         mDataAdapter.setOnDeleteButtonClick((v) -> new AlertDialog.Builder(this.getContext())
-                    .setTitle("Delete")
-                    .setMessage("Do you really want to delete:\n" + v[v.length - 2] + " - " + v[v.length - 1])
-                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle(v[v.length - 2])
+                    .setMessage("Do you want to delete:\n" + v[v.length - 1])
+                    .setIcon(R.drawable.ic_delete_forever_black_24dp)
                     .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> deleteData(v))
                     .setNegativeButton(android.R.string.no, null).show());
+
+        mDataAdapter.setOnViewItemClick((v) -> displayItemInfo(v));
     }
 
     private void deleteData(String[] v) {
@@ -76,5 +79,12 @@ public class NotificationRecycleView extends RecyclerView {
         mDataSet.clear();
         mDataSet.addAll(mRandomReminder.getData(RandomReminderUtil.getBoolean(getResources().getString(R.string.key_display_edge))));
         mDataAdapter.notifyDataSetChanged();
+    }
+
+    private void displayItemInfo(String[] data) {
+        new AlertDialog.Builder(this.getContext())
+                .setTitle(data[data.length - 2])
+                .setMessage(data[data.length - 1])
+                .setIcon(R.drawable.ic_label_black_24dp).show();
     }
 }

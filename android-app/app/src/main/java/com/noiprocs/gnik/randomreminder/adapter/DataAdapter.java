@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.noiprocs.gnik.randomreminder.R;
@@ -15,7 +16,8 @@ import java.util.List;
 public class DataAdapter extends RecyclerView.Adapter {
 
     private List<String> mDataSet;
-    private OnViewDeleteButtonClick mOnDeleteButtonClick;
+    private OnViewButtonClick mOnDeleteButtonClick;
+    private OnViewButtonClick mOnViewItemClick;
 
     public DataAdapter(List<String> dataSet){
         this.mDataSet = dataSet;
@@ -36,6 +38,7 @@ public class DataAdapter extends RecyclerView.Adapter {
 
         viewHolder.mLabel.setText(item);
         viewHolder.mImageButton.setOnClickListener((v) -> mOnDeleteButtonClick.onClick(item.split(" - ")));
+        viewHolder.mRelativeLayout.setOnClickListener((v) -> mOnViewItemClick.onClick(item.split(" - ")));
     }
 
     @Override
@@ -44,22 +47,28 @@ public class DataAdapter extends RecyclerView.Adapter {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
+        RelativeLayout mRelativeLayout;
         TextView mLabel;
         ImageButton mImageButton;
 
         ViewHolder(View v){
             super(v);
 
+            this.mRelativeLayout = v.findViewById(R.id.display_data_view_item);
             this.mLabel = v.findViewById(R.id.display_data_view_item_label);
             this.mImageButton = v.findViewById(R.id.display_data_view_item_delete_button);
         }
     }
 
-    public void setOnDeleteButtonClick(OnViewDeleteButtonClick onButtonClick) {
+    public void setOnDeleteButtonClick(OnViewButtonClick onButtonClick) {
         this.mOnDeleteButtonClick = onButtonClick;
     }
 
-    public interface OnViewDeleteButtonClick {
+    public void setOnViewItemClick(OnViewButtonClick onViewItemClick) {
+        this.mOnViewItemClick = onViewItemClick;
+    }
+
+    public interface OnViewButtonClick {
         void onClick(final String[] data);
     }
 }

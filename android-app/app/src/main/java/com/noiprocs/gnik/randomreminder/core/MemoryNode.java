@@ -5,6 +5,7 @@ import java.util.LinkedList;
 
 public abstract class MemoryNode {
 	protected int childCount;
+	protected boolean activate;
 
 	private List<MemoryNode> parentList = new LinkedList<>();
 
