@@ -44,7 +44,7 @@ public class NotificationRecycleView extends RecyclerView {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         this.setLayoutManager(linearLayoutManager);
 
-        mDataSet = mRandomReminder.getData(RandomReminderUtil.getBoolean(getResources().getString(R.string.key_display_edge)));
+        mDataSet = mRandomReminder.getData(RandomReminderUtil.getBoolean(getResources().getString(R.string.key_display_edge)), RandomReminderUtil.getBoolean(getResources().getString(R.string.key_display_inactivate_node)));
         mDataAdapter = new DataAdapter(mDataSet);
         this.setAdapter(mDataAdapter);
 
@@ -77,7 +77,7 @@ public class NotificationRecycleView extends RecyclerView {
 
     public void reloadRecycleView() {
         mDataSet.clear();
-        mDataSet.addAll(mRandomReminder.getData(RandomReminderUtil.getBoolean(getResources().getString(R.string.key_display_edge))));
+        mDataSet.addAll(mRandomReminder.getData(RandomReminderUtil.getBoolean(getResources().getString(R.string.key_display_edge)), RandomReminderUtil.getBoolean(getResources().getString(R.string.key_display_inactivate_node))));
         mDataAdapter.notifyDataSetChanged();
     }
 

@@ -14,6 +14,7 @@
 
     <!-- Setting screen -->
     <string name="main_setting_display_edge_option">Display tags</string>
+    <string name="main_setting_display_inactivate_node_option">Display inactivate nodes</string>
     <string name="main_setting_notification_interval_text">Notification Interval</string>
     <string name="main_notification_item_dialog_image_button_content_description">Delete Button</string>
 </resources>

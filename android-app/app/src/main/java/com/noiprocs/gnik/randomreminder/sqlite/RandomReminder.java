@@ -144,7 +144,7 @@ public class RandomReminder extends MemoryAider {
         return new ArrayList<>(set);
     }
 
-    public List<Node> getData(boolean displayEdge) {
+    public List<Node> getData(boolean displayEdge, boolean displayInactivateNode) {
         List<Node> result = new ArrayList<>();
 
         Collections.sort(leafList, (u, v) -> {
@@ -154,7 +154,9 @@ public class RandomReminder extends MemoryAider {
             else return u.getParent().compareTo(v.getParent());
         });
 
-        result.addAll(leafList);
+        for (Leaf leaf: leafList) {
+            if (displayInactivateNode || leaf.isActivate()) result.add(leaf);
+        }
 
         if (!displayEdge) {
             return result;
@@ -162,8 +164,9 @@ public class RandomReminder extends MemoryAider {
 
         Collections.sort(edgeList, (u, v) -> u.getParent().compareTo(v.getParent()));
 
-        result.addAll(edgeList);
-
+        for (Edge edge: edgeList) {
+            if (displayInactivateNode || edge.isActivate()) result.add(edge);
+        }
         return result;
     }
 
