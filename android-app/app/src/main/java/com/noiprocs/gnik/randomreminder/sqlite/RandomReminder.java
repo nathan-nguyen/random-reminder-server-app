@@ -51,7 +51,6 @@ public class RandomReminder extends MemoryAider {
         Cursor leafCursor = database.rawQuery("select * from " + SQLiteDBHelper.LEAF_TABLE_NAME, null);
         if (leafCursor.moveToFirst()) {
             while (!leafCursor.isAfterLast()) {
-                int id = leafCursor.getInt(leafCursor.getColumnIndex(SQLiteDBHelper.LEAF_TABLE_ID));
                 String parent = leafCursor.getString(leafCursor.getColumnIndex(SQLiteDBHelper.LEAF_PARENT));
                 String content = leafCursor.getString(leafCursor.getColumnIndex(SQLiteDBHelper.LEAF_CONTENT));
 
@@ -61,6 +60,7 @@ public class RandomReminder extends MemoryAider {
             }
         }
 
+        // TODO: This is a bad implementation since data is loaded twice
         updateEdgeData();
         updateLeafData();
     }
@@ -95,6 +95,9 @@ public class RandomReminder extends MemoryAider {
         return rowId;
     }
 
+    /**
+     * Update the current Edge dataset when database is changed
+     */
     private void updateEdgeData() {
         edgeList.clear();
         SQLiteDatabase database = new SQLiteDBHelper(mContext).getReadableDatabase();
@@ -103,13 +106,17 @@ public class RandomReminder extends MemoryAider {
             while (!structureCursor.isAfterLast()) {
                 String parent = structureCursor.getString(structureCursor.getColumnIndex(SQLiteDBHelper.EDGE_PARENT));
                 String child = structureCursor.getString(structureCursor.getColumnIndex(SQLiteDBHelper.EDGE_CHILD));
+                int activate = structureCursor.getInt(structureCursor.getColumnIndex(SQLiteDBHelper.EDGE_ACTIVATE));
 
-                edgeList.add(new Edge(parent, child));
+                edgeList.add(new Edge(parent, child, activate));
                 structureCursor.moveToNext();
             }
         }
     }
 
+    /**
+     * Update the current Leaf dataset when database is changed
+     */
     private void updateLeafData() {
         leafList.clear();
         SQLiteDatabase database = new SQLiteDBHelper(mContext).getReadableDatabase();
@@ -120,8 +127,9 @@ public class RandomReminder extends MemoryAider {
                 int id = leafCursor.getInt(leafCursor.getColumnIndex(SQLiteDBHelper.LEAF_TABLE_ID));
                 String parent = leafCursor.getString(leafCursor.getColumnIndex(SQLiteDBHelper.LEAF_PARENT));
                 String content = leafCursor.getString(leafCursor.getColumnIndex(SQLiteDBHelper.LEAF_CONTENT));
+                int activate = leafCursor.getInt(leafCursor.getColumnIndex(SQLiteDBHelper.LEAF_ACTIVATE));
 
-                leafList.add(new Leaf(id, parent, content));
+                leafList.add(new Leaf(id, parent, content, activate));
                 leafCursor.moveToNext();
             }
         }

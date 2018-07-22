@@ -47,7 +47,7 @@ public class NotificationRecycleView extends RecyclerView {
     }
 
     private void registerEvent() {
-        mDataAdapter.setOnButtonClick((v) -> new AlertDialog.Builder(this.getContext())
+        mDataAdapter.setOnDeleteButtonClick((v) -> new AlertDialog.Builder(this.getContext())
                     .setTitle("Delete")
                     .setMessage("Do you really want to delete:\n" + v[v.length - 2] + " - " + v[v.length - 1])
                     .setIcon(android.R.drawable.ic_dialog_alert)

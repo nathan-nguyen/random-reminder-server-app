@@ -15,7 +15,7 @@ import java.util.List;
 public class DataAdapter extends RecyclerView.Adapter {
 
     private List<String> mDataSet;
-    private OnViewButtonClick mOnButtonClick;
+    private OnViewDeleteButtonClick mOnDeleteButtonClick;
 
     public DataAdapter(List<String> dataSet){
         this.mDataSet = dataSet;
@@ -35,7 +35,7 @@ public class DataAdapter extends RecyclerView.Adapter {
         ViewHolder viewHolder = (ViewHolder) holder;
 
         viewHolder.mLabel.setText(item);
-        viewHolder.mImageButton.setOnClickListener((v) -> mOnButtonClick.onClick(item.split(" - ")));
+        viewHolder.mImageButton.setOnClickListener((v) -> mOnDeleteButtonClick.onClick(item.split(" - ")));
     }
 
     @Override
@@ -55,11 +55,11 @@ public class DataAdapter extends RecyclerView.Adapter {
         }
     }
 
-    public void setOnButtonClick(OnViewButtonClick onButtonClick) {
-        this.mOnButtonClick = onButtonClick;
+    public void setOnDeleteButtonClick(OnViewDeleteButtonClick onButtonClick) {
+        this.mOnDeleteButtonClick = onButtonClick;
     }
 
-    public interface OnViewButtonClick {
+    public interface OnViewDeleteButtonClick {
         void onClick(final String[] data);
     }
 }

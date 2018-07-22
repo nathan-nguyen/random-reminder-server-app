@@ -3,10 +3,12 @@ package com.noiprocs.gnik.randomreminder.model;
 public class Edge {
     private String parent;
     private String child;
+    private int activate;
 
-    public Edge(String parent, String child) {
+    public Edge(String parent, String child, int activate) {
         this.parent = parent;
         this.child = child;
+        this.activate = activate;
     }
 
     @Override
