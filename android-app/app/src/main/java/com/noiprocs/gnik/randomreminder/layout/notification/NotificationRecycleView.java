@@ -7,11 +7,15 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.noiprocs.gnik.randomreminder.R;
 import com.noiprocs.gnik.randomreminder.RandomReminderUtil;
 import com.noiprocs.gnik.randomreminder.adapter.DataAdapter;
+import com.noiprocs.gnik.randomreminder.model.Edge;
+import com.noiprocs.gnik.randomreminder.model.Leaf;
+import com.noiprocs.gnik.randomreminder.model.Node;
 import com.noiprocs.gnik.randomreminder.sqlite.RandomReminder;
 
 import java.util.List;
@@ -19,7 +23,7 @@ import java.util.List;
 public class NotificationRecycleView extends RecyclerView {
 
     private RandomReminder mRandomReminder;
-    private List<String> mDataSet;
+    private List<Node> mDataSet;
     private DataAdapter mDataAdapter;
 
     public NotificationRecycleView(Context context) {
@@ -48,22 +52,18 @@ public class NotificationRecycleView extends RecyclerView {
     }
 
     private void registerEvent() {
-        mDataAdapter.setOnDeleteButtonClick((v) -> new AlertDialog.Builder(this.getContext())
-                    .setTitle(v[v.length - 2])
-                    .setMessage("Do you want to delete:\n" + v[v.length - 1])
-                    .setIcon(R.drawable.ic_delete_forever_black_24dp)
-                    .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> deleteData(v))
-                    .setNegativeButton(android.R.string.no, null).show());
+        mDataAdapter.setOnDeleteButtonClick((v) -> showDeleteItemDialog(v));
 
-        mDataAdapter.setOnViewItemClick((v) -> displayItemInfo(v));
+        mDataAdapter.setOnViewItemClick((v) -> displayItemInfoDialog(v));
     }
 
-    private void deleteData(String[] v) {
+    private void deleteData(Node node) {
         int result = -1;
-        if (v.length == 2) {
-            result = mRandomReminder.deleteEdge(v);
-        } else if (v.length == 3) {
-            result = mRandomReminder.deleteLeaf(v[0], v[1]);
+        if (node instanceof Edge) {
+            result = mRandomReminder.deleteEdge(node.getParent(), node.getValue());
+        }
+        else if (node instanceof Leaf) {
+            result = mRandomReminder.deleteLeaf(String.valueOf(((Leaf) node).getId()), node.getParent());
         }
 
         if (result > 0) {
@@ -81,10 +81,25 @@ public class NotificationRecycleView extends RecyclerView {
         mDataAdapter.notifyDataSetChanged();
     }
 
-    private void displayItemInfo(String[] data) {
+    private void showDeleteItemDialog(Node node) {
         new AlertDialog.Builder(this.getContext())
-                .setTitle(data[data.length - 2])
-                .setMessage(data[data.length - 1])
+                .setTitle(node.getParent())
+                .setMessage("Do you want to delete:\n" + node.getValue())
+                .setIcon(R.drawable.ic_delete_forever_black_24dp)
+                .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> deleteData(node))
+                .setNegativeButton(android.R.string.no, null).show();
+    }
+
+    private void displayItemInfoDialog(Node node) {
+        Dialog dialog = new AlertDialog.Builder(this.getContext())
+                .setView(R.layout.main_notification_item_dialog).setTitle(node.getParent())
+                .setMessage(node.getValue())
                 .setIcon(R.drawable.ic_label_black_24dp).show();
+
+        ((Switch) dialog.findViewById(R.id.main_notification_item_dialog_switch)).setOnCheckedChangeListener((compoundButton, isChecked) -> System.out.println(isChecked));
+        dialog.findViewById(R.id.main_notification_item_dialog_delete_button).setOnClickListener((v) -> {
+            showDeleteItemDialog(node);
+            dialog.dismiss();
+        });
     }
 }

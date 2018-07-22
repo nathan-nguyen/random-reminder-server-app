@@ -10,16 +10,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.noiprocs.gnik.randomreminder.R;
+import com.noiprocs.gnik.randomreminder.model.Edge;
+import com.noiprocs.gnik.randomreminder.model.Leaf;
+import com.noiprocs.gnik.randomreminder.model.Node;
 
 import java.util.List;
 
 public class DataAdapter extends RecyclerView.Adapter {
 
-    private List<String> mDataSet;
+    private List<Node> mDataSet;
     private OnViewButtonClick mOnDeleteButtonClick;
     private OnViewButtonClick mOnViewItemClick;
 
-    public DataAdapter(List<String> dataSet){
+    public DataAdapter(List<Node> dataSet){
         this.mDataSet = dataSet;
     }
 
@@ -32,13 +35,13 @@ public class DataAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        final String item = mDataSet.get(position);
+        final Node item = mDataSet.get(position);
 
         ViewHolder viewHolder = (ViewHolder) holder;
 
-        viewHolder.mLabel.setText(item);
-        viewHolder.mImageButton.setOnClickListener((v) -> mOnDeleteButtonClick.onClick(item.split(" - ")));
-        viewHolder.mRelativeLayout.setOnClickListener((v) -> mOnViewItemClick.onClick(item.split(" - ")));
+        viewHolder.mLabel.setText(item.getParent() + " - " + item.getValue());
+        viewHolder.mImageButton.setOnClickListener((v) -> mOnDeleteButtonClick.onClick(item));
+        viewHolder.mRelativeLayout.setOnClickListener((v) -> mOnViewItemClick.onClick(item));
     }
 
     @Override
@@ -69,6 +72,6 @@ public class DataAdapter extends RecyclerView.Adapter {
     }
 
     public interface OnViewButtonClick {
-        void onClick(final String[] data);
+        void onClick(final Node node);
     }
 }

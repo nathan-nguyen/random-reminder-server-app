@@ -10,6 +10,7 @@ import com.noiprocs.gnik.randomreminder.core.MemoryAider;
 import com.noiprocs.gnik.randomreminder.core.MemoryAiderException;
 import com.noiprocs.gnik.randomreminder.model.Edge;
 import com.noiprocs.gnik.randomreminder.model.Leaf;
+import com.noiprocs.gnik.randomreminder.model.Node;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,7 +32,7 @@ public class RandomReminder extends MemoryAider {
     protected void loadStructureData() {
         SQLiteDatabase database = new SQLiteDBHelper(mContext).getReadableDatabase();
 
-        Cursor structureCursor = database.rawQuery("select * from " + SQLiteDBHelper.EDGE_TABLE_NAME, null);
+        Cursor structureCursor = database.rawQuery("select * from " + SQLiteDBHelper.EDGE_TABLE_NAME + " where " + SQLiteDBHelper.EDGE_ACTIVATE + " = 1", null);
 
         if (structureCursor.moveToFirst()) {
             while (!structureCursor.isAfterLast()) {
@@ -48,7 +49,7 @@ public class RandomReminder extends MemoryAider {
     @Override
     protected void loadContentData() {
         SQLiteDatabase database = new SQLiteDBHelper(mContext).getReadableDatabase();
-        Cursor leafCursor = database.rawQuery("select * from " + SQLiteDBHelper.LEAF_TABLE_NAME, null);
+        Cursor leafCursor = database.rawQuery("select * from " + SQLiteDBHelper.LEAF_TABLE_NAME + " where " + SQLiteDBHelper.LEAF_ACTIVATE + " = 1", null);
         if (leafCursor.moveToFirst()) {
             while (!leafCursor.isAfterLast()) {
                 String parent = leafCursor.getString(leafCursor.getColumnIndex(SQLiteDBHelper.LEAF_PARENT));
@@ -144,8 +145,8 @@ public class RandomReminder extends MemoryAider {
         return new ArrayList<>(set);
     }
 
-    public List<String> getData(boolean displayEdge) {
-        List<String> result = new ArrayList<>();
+    public List<Node> getData(boolean displayEdge) {
+        List<Node> result = new ArrayList<>();
 
         Collections.sort(leafList, (u, v) -> {
             if (u.getParent().equals(v.getParent())) {
@@ -153,9 +154,8 @@ public class RandomReminder extends MemoryAider {
             }
             else return u.getParent().compareTo(v.getParent());
         });
-        for (Leaf l: leafList) {
-            result.add(l.toString());
-        }
+
+        result.addAll(leafList);
 
         if (!displayEdge) {
             return result;
@@ -163,9 +163,7 @@ public class RandomReminder extends MemoryAider {
 
         Collections.sort(edgeList, (u, v) -> u.getParent().compareTo(v.getParent()));
 
-        for (Edge e: edgeList) {
-            result.add(e.toString());
-        }
+        result.addAll(edgeList);
 
         return result;
     }

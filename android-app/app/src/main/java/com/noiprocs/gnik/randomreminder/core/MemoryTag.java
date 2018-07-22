@@ -23,7 +23,7 @@ public class MemoryTag extends MemoryNode {
 			total += child.childCount;
 			if (total > index) return child.getChild(index - (total - child.childCount));
 		}
-		throw new MemoryAiderException("parent: " + tag + " : Index exceeds total childs");
+		throw new MemoryAiderException("parent: " + tag + " : Index exceeds total children");
 	}
 }
 

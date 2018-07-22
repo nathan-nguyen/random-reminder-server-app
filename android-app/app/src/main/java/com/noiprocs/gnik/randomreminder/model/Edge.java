@@ -1,9 +1,7 @@
 package com.noiprocs.gnik.randomreminder.model;
 
-public class Edge {
-    private String parent;
+public class Edge extends Node {
     private String child;
-    private int activate;
 
     public Edge(String parent, String child, int activate) {
         this.parent = parent;
@@ -18,6 +16,11 @@ public class Edge {
 
     public String getParent() {
         return parent;
+    }
+
+    @Override
+    public String getValue() {
+        return child;
     }
 
     public String getChild() {
