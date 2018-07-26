@@ -3,5 +3,6 @@
     <string name="app_preference">app.properties</string>
     <string name="key_display_edge">display_edge_key</string>
     <string name="key_display_inactivate_node">display_inactivate_node</string>
+    <string name="key_vibration">vibration_key</string>
     <string name="key_notification_interval">notification_interval_key</string>
 </resources>

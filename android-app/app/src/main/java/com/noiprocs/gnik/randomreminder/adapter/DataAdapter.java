@@ -38,7 +38,7 @@ public class DataAdapter extends RecyclerView.Adapter {
 
         ViewHolder viewHolder = (ViewHolder) holder;
 
-        viewHolder.mLabel.setText(item.getParent() + " - " + item.getValue());
+        viewHolder.mLabel.setText(String.format("%s - %s", item.getParent() ,item.getValue()));
         if (!item.isActivate()) {
             viewHolder.mLabel.setTextColor(Color.LTGRAY);
         }

@@ -11,6 +11,7 @@ import android.support.v4.app.NotificationManagerCompat;
 
 import com.noiprocs.gnik.randomreminder.MainReminderActivity;
 import com.noiprocs.gnik.randomreminder.R;
+import com.noiprocs.gnik.randomreminder.RandomReminderUtil;
 import com.noiprocs.gnik.randomreminder.core.MemoryAiderException;
 import com.noiprocs.gnik.randomreminder.sqlite.RandomReminder;
 
@@ -44,7 +45,10 @@ public class RandomReminderService extends IntentService {
             Intent notifyIntent = new Intent(this, MainReminderActivity.class);
 
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, notifyIntent, PendingIntent.FLAG_ONE_SHOT);
-            builder.setContentIntent(pendingIntent).setDefaults(Notification.DEFAULT_VIBRATE).setAutoCancel(true);
+            builder.setContentIntent(pendingIntent).setAutoCancel(true);
+            if (RandomReminderUtil.getBoolean(getResources().getString(R.string.key_vibration))) {
+                builder.setDefaults(Notification.DEFAULT_VIBRATE);
+            }
             Notification notification = builder.build();
             NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
             managerCompat.notify(NOTIFICATION_ID, notification);

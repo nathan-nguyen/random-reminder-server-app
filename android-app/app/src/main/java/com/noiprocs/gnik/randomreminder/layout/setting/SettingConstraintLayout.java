@@ -34,6 +34,7 @@ public class SettingConstraintLayout extends ConstraintLayout {
     public void initializeLayout() {
         Switch mSwitch = findViewById(R.id.main_setting_display_edge_switch);
         Switch mInactivateNodeSwitch = findViewById(R.id.main_setting_display_inactivate_node_switch);
+        Switch mVibrationSwitch = findViewById(R.id.main_setting_vibration_node_switch);
         mIntervalNumberPicker = findViewById(R.id.main_setting_notification_numberPicker);
 
         mIntervalNumberPicker.setMinValue(RandomReminderConstant.MIN_NOTIFICATION_INTERVAL);
@@ -47,11 +48,13 @@ public class SettingConstraintLayout extends ConstraintLayout {
         // Set initial value for mSwitch and mInactivateNodeSwitch
         mSwitch.setChecked(RandomReminderUtil.getBoolean(getResources().getString(R.string.key_display_edge)));
         mInactivateNodeSwitch.setChecked(RandomReminderUtil.getBoolean(getResources().getString(R.string.key_display_inactivate_node)));
+        mVibrationSwitch.setChecked(RandomReminderUtil.getBoolean(getResources().getString(R.string.key_vibration)));
 
         this.setupService();
 
         mSwitch.setOnCheckedChangeListener((compoundButton, isChecked) -> RandomReminderUtil.setBoolean(getResources().getString(R.string.key_display_edge), isChecked));
         mInactivateNodeSwitch.setOnCheckedChangeListener((compoundButton, isChecked) -> RandomReminderUtil.setBoolean(getResources().getString(R.string.key_display_inactivate_node), isChecked));
+        mVibrationSwitch.setOnCheckedChangeListener((compoundButton, isChecked) -> RandomReminderUtil.setBoolean(getResources().getString(R.string.key_vibration), isChecked));
 
         mIntervalNumberPicker.setOnValueChangedListener((picker, oldVal, newVal) -> {
             RandomReminderUtil.setInt(getResources().getString(R.string.key_notification_interval), newVal);
