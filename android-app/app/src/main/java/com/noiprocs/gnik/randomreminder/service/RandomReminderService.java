@@ -38,6 +38,7 @@ public class RandomReminderService extends IntentService {
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
+        RandomReminderUtil.initializedPreference(this);
         Notification.Builder builder = new Notification.Builder(this);
         try {
             String message = mRandomReminder.getRandomLeaf();

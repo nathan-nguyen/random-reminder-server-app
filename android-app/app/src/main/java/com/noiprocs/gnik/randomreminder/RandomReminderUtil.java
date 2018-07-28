@@ -8,7 +8,7 @@ public class RandomReminderUtil {
     private static SharedPreferences PREFERENCE;
     private static SharedPreferences.Editor EDITOR;
 
-    public static void initializedPerference(Context context) {
+    public static void initializedPreference(Context context) {
         RandomReminderUtil.PREFERENCE = PreferenceManager.getDefaultSharedPreferences(context);
         EDITOR = PREFERENCE.edit();
     }

@@ -91,7 +91,7 @@ public class MainReminderActivity extends AppCompatActivity {
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        RandomReminderUtil.initializedPerference(this);
+        RandomReminderUtil.initializedPreference(this);
 
         mTextMessage = findViewById(R.id.message);
         mParentEditText = findViewById(R.id.parentEditText);
